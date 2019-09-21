@@ -79,9 +79,11 @@ var renderPin = function (dataOffer) {
 
 var renderFragment = function (allOffer) {
   var fragment = document.createDocumentFragment();
-  for (var j = 0; j < allOffer.length; j++) {
-    fragment.appendChild(renderPin(allOffer[j]));
-  }
+
+  allOffer.forEach(function (num) {
+    fragment.appendChild(renderPin(num));
+  });
+
   return fragment;
 };
 
