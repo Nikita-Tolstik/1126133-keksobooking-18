@@ -2,15 +2,17 @@
 
 var QUANTITY_AD = 8;
 var NUMBER_AVATARS = ['01', '02', '03', '04', '05', '06', '07', '08'];
-var ADRESS_LOCATION = '600, 350';
+var ADRESS_LOCATION = ['600, 350', '350, 600', '500, 400', '300, 200', '100, 700'];
+var MIN_LENGTH = 1;
 var MIN_NUMBER = 0;
-var TITLE_AD = 'Жильё';
-var COST_SUM = 5000;
-var MAX_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+var TITLE_AD = ['Роскошно', 'Недорого', 'В центре', 'Сдам на сутки', 'Продам'];
+var COST_SUM = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000];
+var NUMBER_ROOMS = [1, 2, 3, 4, 5, 10];
+var NUMBER_GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 var HOUSE_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var CHECKIN_TIMES = ['12:00', '13:00', '14:00'];
 var CHECKOUT_TIMES = ['12:00', '13:00', '14:00'];
-var DESCRIPTION_AD = 'Уютно и просторно';
+var DESCRIPTION_AD = ['Уютно и просторно', 'Светло', 'Тихие соседи', 'Большие комнаты', 'Рядом метро', 'Большой балкон'];
 var FEATURE_THINGS = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var DATA_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var MIN_Y = 130;
@@ -24,14 +26,17 @@ map.classList.remove('map--faded');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var pinListElement = document.querySelector('.map__pins');
 
-var getDescriptionAd = function (quantity) {
-  var getRandomNumber = function (min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  };
+var getArrayRandomElement = function (valueElement) {
+  var min = 0;
+  var numberRandom = Math.floor(Math.random() * (valueElement.length - min)) + min;
+  return valueElement[numberRandom];
+};
 
-  var getRandomIntInclusive = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
+var getRandomNumber = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+var getDescriptionAd = function (quantity) {
 
   var dataOptions = [];
   for (var i = 0; i < quantity; i++) {
@@ -41,22 +46,22 @@ var getDescriptionAd = function (quantity) {
       },
 
       'offer': {
-        'title': TITLE_AD,
-        'address': ADRESS_LOCATION,
-        'price': COST_SUM,
-        'type': HOUSE_TYPES[getRandomNumber(MIN_NUMBER, HOUSE_TYPES.length)],
-        'rooms': MAX_NUMBERS[getRandomNumber(MIN_NUMBER, MAX_NUMBERS.length)],
-        'guests': MAX_NUMBERS[getRandomNumber(MIN_NUMBER, MAX_NUMBERS.length)],
-        'checkin': CHECKIN_TIMES[getRandomNumber(MIN_NUMBER, CHECKIN_TIMES.length)],
-        'checkout': CHECKOUT_TIMES[getRandomNumber(MIN_NUMBER, CHECKOUT_TIMES.length)],
-        'features': FEATURE_THINGS.slice(MIN_NUMBER, getRandomNumber(MIN_NUMBER, FEATURE_THINGS.length)),
-        'description': DESCRIPTION_AD,
-        'photos': DATA_PHOTOS.slice(MIN_NUMBER, getRandomNumber(MIN_NUMBER, DATA_PHOTOS.length)),
+        'title': getArrayRandomElement(TITLE_AD),
+        'address': getArrayRandomElement(ADRESS_LOCATION),
+        'price': getArrayRandomElement(COST_SUM),
+        'type': getArrayRandomElement(HOUSE_TYPES),
+        'rooms': getArrayRandomElement(NUMBER_ROOMS),
+        'guests': getArrayRandomElement(NUMBER_GUESTS),
+        'checkin': getArrayRandomElement(CHECKIN_TIMES),
+        'checkout': getArrayRandomElement(CHECKOUT_TIMES),
+        'features': FEATURE_THINGS.slice(MIN_NUMBER, getRandomNumber(MIN_LENGTH, FEATURE_THINGS.length)),
+        'description': getArrayRandomElement(DESCRIPTION_AD),
+        'photos': DATA_PHOTOS.slice(MIN_NUMBER, getRandomNumber(MIN_LENGTH, DATA_PHOTOS.length)),
       },
 
       'location': {
-        'x': getRandomIntInclusive(MIN_X, MAX_X),
-        'y': getRandomIntInclusive(MIN_Y, MAX_Y)
+        'x': getRandomNumber(MIN_X, MAX_X),
+        'y': getRandomNumber(MIN_Y, MAX_Y)
       }
     };
     dataOptions.push(information);
