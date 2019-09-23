@@ -7,7 +7,7 @@ var MIN_LENGTH = 1;
 var MIN_NUMBER = 0;
 var TITLE_AD = ['Роскошно', 'Недорого', 'В центре', 'Сдам на сутки', 'Продам'];
 var COST_SUM = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000];
-var NUMBER_ROOMS = [1, 2, 3, 4, 5, 10];
+var NUMBER_ROOMS = [1, 2, 3, 4, 5, 14];
 var NUMBER_GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 var HOUSE_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var CHECKIN_TIMES = ['12:00', '13:00', '14:00'];
@@ -25,6 +25,10 @@ map.classList.remove('map--faded');
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var pinListElement = document.querySelector('.map__pins');
+
+var cardTemplate = document.querySelector('#card').content;
+var cardListElement = document.querySelector('.map');
+var cardListElementAll = document.querySelectorAll('.map');
 
 var getArrayRandomElement = function (valueElement) {
   var min = 0;
@@ -82,7 +86,7 @@ var renderPin = function (dataOffer) {
   return pinElement;
 };
 
-var renderFragment = function (allOffer) {
+var renderPinFragment = function (allOffer) {
   var fragment = document.createDocumentFragment();
 
   allOffer.forEach(function (num) {
@@ -92,4 +96,70 @@ var renderFragment = function (allOffer) {
   return fragment;
 };
 
-pinListElement.appendChild(renderFragment(adds));
+pinListElement.appendChild(renderPinFragment(adds));
+
+var firstCard = adds[0];
+
+var getStringToNumber = function (number) {
+  var element = String(number);
+  var elementLast = Number(element[element.length - 1]);
+
+  return elementLast;
+};
+
+var getStringToNumber2 = function (number) {
+  var element = String(number);
+  var roomElementLast = Number(element[element.length - 2] + element[element.length - 1]);
+
+  return roomElementLast;
+};
+
+var getStringEnd = function (numberRoom, numberGuest) {
+  var guestStringEnd = 'ей';
+
+  if (getStringToNumber(numberGuest) === 1) {
+    guestStringEnd = 'я';
+  }
+
+  var roomStringEnd = '';
+
+  if (getStringToNumber(numberRoom) === 1) {
+    roomStringEnd = 'а';
+  } else if (getStringToNumber2(numberRoom) >= 12 && getStringToNumber2(numberRoom) <= 14) {
+    roomStringEnd = '';
+  } else if (getStringToNumber(numberRoom) >= 2 && getStringToNumber(numberRoom) <= 4) {
+    roomStringEnd = 'ы';
+  }
+
+  return numberRoom + ' комнат' + roomStringEnd + ' для ' + numberGuest + ' гост' + guestStringEnd;
+};
+
+var renderCard = function (dataOffer) {
+  var cardElement = cardTemplate.cloneNode(true);
+
+  var card = {
+    'premise': {
+      'flat': 'Квартира',
+      'bungalo': 'Бунгало',
+      'house': 'Дом',
+      'palace': 'Дворец'
+    }
+  };
+
+  cardElement.querySelector('.popup__title').textContent = dataOffer.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = dataOffer.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = dataOffer.offer.price + '₽/ночь';
+  cardElement.querySelector('.popup__type').textContent = card.premise[dataOffer.offer.type];
+  cardElement.querySelector('.popup__text--capacity').textContent = getStringEnd(dataOffer.offer.rooms, dataOffer.offer.guests);
+  return cardElement;
+};
+
+var renderCardFragment = function (allOffer) {
+  var fragment = document.createDocumentFragment();
+
+  fragment.appendChild(renderCard(allOffer));
+
+  return fragment;
+};
+
+cardListElement.insertBefore(renderCardFragment(firstCard), cardListElementAll[1]);
