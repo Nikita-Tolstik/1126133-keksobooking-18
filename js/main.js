@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 var QUANTITY_AD = 8;
 var NUMBER_AVATARS = ['01', '02', '03', '04', '05', '06', '07', '08'];
 var ADRESS_LOCATION = ['600, 350', '350, 600', '500, 400', '300, 200', '100, 700'];
@@ -27,8 +27,10 @@ var types = {
   'palace': 'Дворец'
 };
 
+Перевод страницы в активный режим
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
+
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var pinListElement = document.querySelector('.map__pins');
@@ -102,9 +104,13 @@ var renderPinFragment = function (allOffer) {
 
   return fragment;
 };
+*/
 
+/* Вызов метода меток объявлений
 pinListElement.appendChild(renderPinFragment(adds));
+*/
 
+/*
 var firstCard = adds[0];
 
 var getStringToNumber = function (number) {
@@ -185,4 +191,25 @@ var renderCardFragment = function (allOffer) {
   return fragment;
 };
 
+Вызов метода отображения карточки объявления
 cardListElement.insertBefore(renderCardFragment(firstCard), mapFiltersContainer);
+*/
+
+var map = document.querySelector('.map');
+map.classList.remove('map--faded');
+
+var adForm = document.querySelector('.ad-form');
+var fieldsetAll = adForm.querySelectorAll('fieldset');
+fieldsetAll.forEach(function (element) {
+  element.setAttribute('disabled', 'disabled');
+});
+
+var mapFilters = document.querySelector('.map__filters');
+var mapFiltersChildren = mapFilters.children;
+var mapFiltersAll = Array.from(mapFiltersChildren);
+
+mapFiltersAll.forEach(function (element) {
+  element.setAttribute('disabled', 'disabled');
+});
+
+
