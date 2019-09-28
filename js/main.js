@@ -279,10 +279,12 @@ var validateRoomsNumbers = function () {
   var rooms = roomsSelect.value;
   var guests = document.querySelector('[name=capacity]').value;
 
-  roomsSelect.setCustomValidity(roomsCapacityMap[rooms].guests.includes(guests) ? roomsCapacityMap[rooms].errorText : '');
+  roomsSelect.setCustomValidity(roomsCapacityMap[rooms].guests.includes(guests) ? '' : roomsCapacityMap[rooms].errorText);
 };
-var roomSelect = document.querySelector('[name=rooms]');
 
-roomSelect.addEventListener('change', function (evt) {
+var roomsSelect = document.querySelector('[name=rooms]');
+roomsSelect.addEventListener('input', function () {
   validateRoomsNumbers();
 });
+
+
