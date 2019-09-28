@@ -1,8 +1,5 @@
 'use strict';
 
-var ENTER_KEYCODE = 13;
-var PINHALF_WIDTH = 30;
-var PIN_HEIGHT = 80;
 /*
 var QUANTITY_AD = 8;
 var NUMBER_AVATARS = ['01', '02', '03', '04', '05', '06', '07', '08'];
@@ -199,49 +196,58 @@ var renderCardFragment = function (allOffer) {
 cardListElement.insertBefore(renderCardFragment(firstCard), mapFiltersContainer);
 */
 
+var ENTER_KEYCODE = 13;
+var PINHALF_WIDTH = 30;
+var PIN_HEIGHT = 80;
+var ONE_GUEST = '1';
+// Неактивное состояние страницы
 var map = document.querySelector('.map');
 var adForm = document.querySelector('.ad-form');
 var adFormfieldsetAll = adForm.querySelectorAll('fieldset');
 
 adFormfieldsetAll.forEach(function (element) {
-  element.disabled = 'disabled';
+  element.disabled = true;
 });
+
+var capacityOptionDisabled = document.querySelectorAll('#capacity option');
 
 var mapFilters = document.querySelector('.map__filters');
 var mapFiltersChildren = mapFilters.children;
 var mapFiltersAll = Array.from(mapFiltersChildren);
 
 mapFiltersAll.forEach(function (element) {
-  element.disabled = 'disabled';
+  element.disabled = true;
 });
 
 var pinMainButton = map.querySelector('.map__pin--main');
+var inputAddress = document.querySelector('#address');
 
-var getLocationPinMain = function (width, height) {
-  var x = parseInt(pinMainButton.style.left.slice(0, -2), 10) + width;
-  var y = parseInt(pinMainButton.style.top.slice(0, -2), 10) + height;
-  return {
-    x: x,
-    y: y
-  };
-};
-var addressLocation = adForm.querySelector('input[name=address]');
-addressLocation.value = getLocationPinMain(PINHALF_WIDTH, PINHALF_WIDTH).x + ', ' + getLocationPinMain(PINHALF_WIDTH, PINHALF_WIDTH).y;
+inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop + PINHALF_WIDTH);
 
-
+// Активное состояние страницы
 var openMap = function () {
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
 
   adFormfieldsetAll.forEach(function (element) {
-    element.disabled = '';
+    element.disabled = false;
   });
 
   mapFiltersAll.forEach(function (element) {
-    element.disabled = '';
+    element.disabled = false;
   });
 
-  addressLocation.value = getLocationPinMain(PINHALF_WIDTH, PIN_HEIGHT).x + ', ' + getLocationPinMain(PINHALF_WIDTH, PIN_HEIGHT).y;
+  capacityOptionDisabled.forEach(function (elem) {
+    elem.disabled = 'disabled';
+    if (elem.selected) {
+      elem.selected = false;
+    }
+    if (elem.value === ONE_GUEST) {
+      elem.selected = true;
+    }
+  });
+
+  inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop + PIN_HEIGHT);
 };
 
 pinMainButton.addEventListener('mousedown', function () {
@@ -253,38 +259,29 @@ pinMainButton.addEventListener('keydown', function (evt) {
     openMap();
   }
 });
-
-
-var validateRoomsNumbers = function () {
+// Проверка валидации комнат и гостей
+var validateRoomsNumbers = function (e) {
   var roomsCapacityMap = {
-    '1': {
-      'guests': ['1'],
-      'errorText': '1 комната для 1 гостя'
-    },
-    '2': {
-      'guests': ['1', '2'],
-      'errorText': '2 комнаты для 1 или 2 гостей'
-    },
-    '3': {
-      'guests': ['1', '2', '3'],
-      'errorText': '3 комнаты для 1, 2 или 3 гостей'
-    },
-    '100': {
-      'guests': ['0'],
-      'errorText': '100 комнат не для гостей'
-    },
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0'],
   };
 
-  var roomsSelect = document.querySelector('[name=rooms]');
-  var rooms = roomsSelect.value;
-  var guests = document.querySelector('[name=capacity]').value;
+  var selectedRoom = e.target.value;
+  var guests = roomsCapacityMap[selectedRoom];
+  var guestsOption = document.querySelectorAll('#capacity option');
 
-  roomsSelect.setCustomValidity(roomsCapacityMap[rooms].guests.includes(guests) ? '' : roomsCapacityMap[rooms].errorText);
+  guestsOption.forEach(function (option) {
+    if (guests.includes(option.value)) {
+      option.disabled = false;
+    } else {
+      option.disabled = true;
+    }
+  });
 };
 
 var roomsSelect = document.querySelector('[name=rooms]');
-roomsSelect.addEventListener('input', function () {
-  validateRoomsNumbers();
+roomsSelect.addEventListener('input', function (e) {
+  validateRoomsNumbers(e);
 });
-
-
