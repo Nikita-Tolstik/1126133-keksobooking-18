@@ -29,6 +29,6 @@
     return fragment;
   };
 
-// Вызов метода добавления меток в разметку / на карту, window.data.dataValues - массив данных
-// pinListElement.appendChild(renderPinFragment(window.data.dataValues));
+  // Вызов метода добавления меток в разметку / на карту, window.data.dataValues - массив данных
+  pinListElement.appendChild(renderPinFragment(window.data.dataValues));
 })();

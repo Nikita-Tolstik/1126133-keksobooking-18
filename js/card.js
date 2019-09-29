@@ -96,5 +96,5 @@
   };
 
   // Вызов метода отображения карточки, window.data.dataValues - массив данных
-  // cardListElement.insertBefore(renderCardFragment(window.data.dataValues[0]), mapFiltersContainer);
+  cardListElement.insertBefore(renderCardFragment(window.data.dataValues[0]), mapFiltersContainer);
 })();
