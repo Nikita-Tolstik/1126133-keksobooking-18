@@ -1,7 +1,7 @@
 'use strict';
 
 //  Создание pin (метки)
-
+/*
 (function () {
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinListElement = document.querySelector('.map__pins');
@@ -32,3 +32,4 @@
   // Вызов метода добавления меток в разметку / на карту, window.data.dataValues - массив данных
   pinListElement.appendChild(renderPinFragment(window.data.dataValues));
 })();
+*/
