@@ -11,9 +11,19 @@
       '100': ['0'],
     };
 
+    var guestsCapacityMap = {
+      '1': '2',
+      '2': '1',
+      '3': '0',
+      '100': '3'
+    };
+
     var selectedRoom = evt.target.value;
     var guests = roomsCapacityMap[selectedRoom];
-    var guestsOption = document.querySelectorAll('#capacity option');
+    var guestSelect = document.querySelector('#capacity');
+    var guestsOption = guestSelect.querySelectorAll('option');
+
+    guestSelect.selectedIndex = guestsCapacityMap[selectedRoom];
 
     guestsOption.forEach(function (option) {
       if (guests.includes(option.value)) {
