@@ -2,12 +2,12 @@
 
 (function () {
   var PINHALF_WIDTH = 32;
-  var PIN_HEIGHT = 82;
+  var PIN_HEIGHT = 80;
   var ONE_GUEST = '1';
   var PINHALF_HEIGHT = 30;
   var MIN_FIELDX = 0 - PINHALF_WIDTH;
-  var MIN_FIELDY = 130 - PIN_HEIGHT;
-  var MAX_FIELDY = 630;
+  var MIN_FIELDY = 130;
+  var MAX_FIELDY = 710;
 
   // Неактивное состояние страницы
   var map = document.querySelector('.map');
@@ -58,7 +58,7 @@
       }
     });
 
-    inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop + PIN_HEIGHT);
+    inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop);
   };
 
   pinMainButton.addEventListener('mousedown', function () {
@@ -116,7 +116,7 @@
       pinMainButton.style.top = offsetY + 'px';
       pinMainButton.style.left = offsetX + 'px';
 
-      inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop + PIN_HEIGHT);
+      inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop);
     };
 
     var onMouseUp = function (upEvt) {
@@ -125,7 +125,7 @@
       if (!dragged) {
         var onMainPinButtonClick = function (evtClick) {
           evtClick.preventDefault();
-          inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop + PIN_HEIGHT);
+          inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop);
           pinMainButton.removeEventListener('click', onMainPinButtonClick);
         };
         pinMainButton.addEventListener('click', onMainPinButtonClick);
