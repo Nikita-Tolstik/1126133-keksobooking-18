@@ -96,21 +96,19 @@
       // Определение границ, за которые не выходит метка
       var maxFieldX = mapPin.offsetWidth;
       var offsetX = 0;
+      offsetX = pinMainButton.offsetLeft - shift.x;
       if (pinMainButton.offsetLeft - shift.x <= MIN_FIELDX) {
         offsetX = MIN_FIELDX;
       } else if (pinMainButton.offsetLeft - shift.x + PINHALF_WIDTH > maxFieldX) {
         offsetX = maxFieldX - PINHALF_WIDTH;
-      } else {
-        offsetX = pinMainButton.offsetLeft - shift.x;
       }
 
       var offsetY = 0;
+      offsetY = pinMainButton.offsetTop - shift.y;
       if (pinMainButton.offsetTop - shift.y <= MIN_FIELDY) {
         offsetY = MIN_FIELDY;
       } else if (pinMainButton.offsetTop - shift.y + PIN_HEIGHT > MAX_FIELDY) {
         offsetY = MAX_FIELDY - PIN_HEIGHT;
-      } else {
-        offsetY = pinMainButton.offsetTop - shift.y;
       }
 
       pinMainButton.style.top = offsetY + 'px';
