@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 (function () {
   var CLASS_FEATURE = 31;
 
@@ -98,3 +98,4 @@
   // Вызов метода отображения карточки, window.data.dataValues - массив данных
   cardListElement.insertBefore(renderCardFragment(window.data.dataValues[0]), mapFiltersContainer);
 })();
+*/
