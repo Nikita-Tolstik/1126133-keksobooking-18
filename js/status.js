@@ -43,12 +43,13 @@
     });
 
     capacityOptionDisabled.forEach(function (elem) {
-      elem.disabled = 'disabled';
+      elem.disabled = true;
       if (elem.selected) {
         elem.selected = false;
       }
       if (elem.value === ONE_GUEST) {
         elem.selected = true;
+        elem.disabled = false;
       }
     });
 
