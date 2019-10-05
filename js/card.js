@@ -1,5 +1,5 @@
 'use strict';
-/*
+
 (function () {
   var CLASS_FEATURE = 31;
 
@@ -10,11 +10,6 @@
     'palace': 'Дворец'
   };
 
-  var cardTemplate = document.querySelector('#card').content;
-  var cardListElement = document.querySelector('.map');
-  var mapFiltersContainer = document.querySelector('.map__filters-container');
-
-
   // Функция для определения одной последней цифры комнат/гостей
   var getStringToNumber = function (number) {
     var element = String(number);
@@ -22,6 +17,7 @@
 
     return elementLast;
   };
+
   // Функция для определения двух последних цифр комнат/гостей
   var getStringToNumberDouble = function (number) {
     var element = String(number);
@@ -29,6 +25,8 @@
 
     return roomElementLast;
   };
+
+
   // Определение окончания строки
   var getStringEnd = function (numberRoom, numberGuest) {
     var guestStringEnd = 'ей';
@@ -48,8 +46,11 @@
     return numberRoom + ' комнат' + roomStringEnd + ' для ' + numberGuest + ' гост' + guestStringEnd;
   };
 
+
   // Создание объявления
   var renderCard = function (dataOffer) {
+    var cardTemplate = document.querySelector('#card').content;
+
     var cardElement = cardTemplate.cloneNode(true);
 
     cardElement.querySelector('.popup__title').textContent = dataOffer.offer.title;
@@ -86,16 +87,19 @@
     return cardElement;
   };
 
-  // Добавление карточки в разметку
-  var renderCardFragment = function (allOffer) {
-    var fragment = document.createDocumentFragment();
-    // Дописать цикл forEach
-    fragment.appendChild(renderCard(allOffer));
+  // Добавление карточки объявления в разметку
+  window.card = {
 
-    return fragment;
+    renderCardFragment: function (addOffer) {
+      var cardListElement = document.querySelector('.map');
+      var mapFiltersContainer = document.querySelector('.map__filters-container');
+
+      var elem = renderCard(addOffer);
+
+      cardListElement.insertBefore(elem, mapFiltersContainer);
+    }
+
   };
 
-  // Вызов метода отображения карточки, window.data.dataValues - массив данных
-  cardListElement.insertBefore(renderCardFragment(window.data.dataValues[0]), mapFiltersContainer);
+
 })();
-*/

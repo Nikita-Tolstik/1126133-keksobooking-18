@@ -38,4 +38,64 @@
   roomsSelect.addEventListener('input', function (evt) {
     validateRoomsNumbers(evt);
   });
+
+  var formAd = document.querySelector('.ad-form');
+
+  // Валидация заголовка
+  var title = formAd.querySelector('#title');
+  title.setAttribute('required', true);
+  title.setAttribute('minlength', '30');
+  title.setAttribute('maxlength', '100');
+
+  // Валидация цены за ночь
+  var priceNight = formAd.querySelector('#price');
+  priceNight.setAttribute('required', true);
+  priceNight.setAttribute('max', '1000000');
+
+  // Валидация соответствия типа жилья и цены за ночь
+  var type = formAd.querySelector('#type');
+  var typeOptions = type.querySelectorAll('option');
+  var selectType = typeOptions[type.selectedIndex].value;
+
+  var typePrice = {
+    'bungalo': '0',
+    'flat': '1000',
+    'house': '5000',
+    'palace': '10000'
+  };
+
+  priceNight.setAttribute('placeholder', typePrice[selectType]);
+  priceNight.setAttribute('value', typePrice[selectType]);
+
+
+  var validateType = function () {
+    typeOptions.forEach(function (option) {
+      if (option.selected) {
+        priceNight.placeholder = typePrice[option.value];
+        priceNight.setAttribute('min', typePrice[option.value]);
+        priceNight.setAttribute('value', typePrice[option.value]);
+
+      }
+    });
+  };
+
+  type.addEventListener('input', function () {
+    validateType();
+  });
+
+  // Валидация адреса
+  var address = formAd.querySelector('#address');
+  address.setAttribute('readonly', true);
+
+  // Валидация времени заезда и выезда
+  var timeIn = formAd.querySelector('#timein');
+  var timeOut = formAd.querySelector('#timeout');
+
+  timeIn.addEventListener('input', function () {
+    timeOut.value = timeIn.value;
+  });
+
+  timeOut.addEventListener('input', function () {
+    timeIn.value = timeOut.value;
+  });
 })();

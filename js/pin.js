@@ -1,8 +1,9 @@
 'use strict';
 
 //  Создание pin (метки)
-/*
+
 (function () {
+
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinListElement = document.querySelector('.map__pins');
 
@@ -14,11 +15,14 @@
     pinElement.style.top = dataOffer.location.y + 'px';
     pinElement.querySelector('img').src = dataOffer.author.avatar;
     pinElement.querySelector('img').alt = dataOffer.offer.title;
+    pinElement.classList.add('offer__pin');
+    pinElement.classList.add('hidden');
 
     return pinElement;
   };
 
   // Добавление метки в разметку / на карту
+
   var renderPinFragment = function (allOffer) {
     var fragment = document.createDocumentFragment();
 
@@ -26,10 +30,10 @@
       fragment.appendChild(renderPin(pinElement));
     });
 
-    return fragment;
+    pinListElement.appendChild(fragment);
+
   };
 
-  // Вызов метода добавления меток в разметку / на карту, window.data.dataValues - массив данных
-  pinListElement.appendChild(renderPinFragment(window.data.dataValues));
+  renderPinFragment(window.data.dataValues); // Вызов метода добавления меток в разметку / на карту, window.data.dataValues - массив данных
+  // window.data.dataValues - массив данных
 })();
-*/

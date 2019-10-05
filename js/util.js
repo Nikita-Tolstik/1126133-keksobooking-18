@@ -19,6 +19,7 @@
   var MAX_X = 1175;
 
   var ENTER_KEYCODE = 13;
+  var ESC_KEYCODE = 27;
 
   window.util = {
 
@@ -40,6 +41,7 @@
     MAX_X: MAX_X,
 
     ENTER_KEYCODE: ENTER_KEYCODE,
+    ESC_KEYCODE: ESC_KEYCODE,
 
     getRandomNumber: function (min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
