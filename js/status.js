@@ -60,17 +60,26 @@
     });
 
     inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop);
+
+    pinMainButton.removeEventListener('keydown', onEnterPress);
+    pinMainButton.removeEventListener('mousedown', onMainPinPress);
   };
 
 
-  pinMainButton.addEventListener('mousedown', function () {
-    openMap();
-  });
-
-  pinMainButton.addEventListener('keydown', function (evt) {
+  var onEnterPress = function (evt) {
     if (evt.keyCode === window.util.ENTER_KEYCODE) {
       openMap();
     }
-  });
+  };
+
+  var onMainPinPress = function (evtCl) {
+    evtCl.preventDefault();
+    openMap();
+  };
+
+  pinMainButton.addEventListener('mousedown', onMainPinPress);
+
+  pinMainButton.addEventListener('keydown', onEnterPress);
+
 
 })();
