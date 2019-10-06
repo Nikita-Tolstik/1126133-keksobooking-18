@@ -23,17 +23,21 @@
 
   // Добавление метки в разметку / на карту
 
-  var renderPinFragment = function (allOffer) {
+  var successHandler = function (arrayData) {
     var fragment = document.createDocumentFragment();
 
-    allOffer.forEach(function (pinElement) {
+    arrayData.forEach(function (pinElement) {
       fragment.appendChild(renderPin(pinElement));
     });
 
     pinListElement.appendChild(fragment);
 
+    window.renderOpenPopup(arrayData); // Вызов функции добавления возможности открытия и закрытия карточки объявления
   };
 
-  renderPinFragment(window.data.dataValues); // Вызов метода добавления меток в разметку / на карту, window.data.dataValues - массив данных
+  // Вызов функции загрузки данных с сервера и обработки ошибок
+  window.backend.load(successHandler, window.backend.errorHandler);
+
+  // Вызов метода добавления меток в разметку / на карту, window.data.dataValues - массив данных
   // window.data.dataValues - массив данных
 })();

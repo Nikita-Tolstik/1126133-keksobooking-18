@@ -2,7 +2,7 @@
 
 (function () {
 
-  var QUANTITY_AD = 8;
+  var QUANTITY_AD = 10;
   var MIN_LENGTH = 1;
   var MIN_NUMBER = 0;
 
