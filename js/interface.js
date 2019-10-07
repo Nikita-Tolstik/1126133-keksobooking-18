@@ -10,6 +10,28 @@
 
   // Добавлена возможность открывать и закрывать карточки объявлений по нажатию на метки
 
+
+  // функции открытия и закрытия карточки объявления
+  window.renderOpenPopup = function (arrayData) {
+    var pinAll = document.querySelectorAll('.offer__pin');
+    pinAll.forEach(function (elem) {
+      START_NUMBER++;
+      renderPinListener(elem, arrayData[START_NUMBER]); // window.data.dataValues - массив данных
+
+    });
+  };
+
+
+  // Запуск функции открытия и закрытия карточки объявления
+  var renderPinListener = function (pin, card) {
+    pin.addEventListener('click', function (evt) {
+      evt.preventDefault();
+
+      openPopup(card);
+    });
+  };
+
+
   // Логика открытия и закрытия 1-ой карточки объявления
   var openPopup = function (cardPopup) {
     // Проверка того есть ли уже открытый попап
@@ -42,29 +64,8 @@
 
   };
 
-  // Запуск функции открытия и закрытия карточки объявления
-  var renderPinListener = function (pin, card) {
-    pin.addEventListener('click', function (evt) {
-      evt.preventDefault();
 
-      openPopup(card);
-    });
-  };
-
-  // функции открытия и закрытия карточки объявления
-  var renderOpenPopup = function () {
-    var pinAll = document.querySelectorAll('.offer__pin');
-    pinAll.forEach(function (elem) {
-      START_NUMBER++;
-      renderPinListener(elem, window.data.dataValues[START_NUMBER]); // window.data.dataValues - массив данных
-
-    });
-  };
-
-  renderOpenPopup(); // Вызов функции добавления возможности открытия и закрытия карточки объявления
-
-
-  // Добавление возможности перемещения главной метки
+  // Добавление возможности перемещения главной метки---------------------------------------------------------------------------------------------------------------
   var pinMainButton = document.querySelector('.map__pin--main');
   var inputAddress = document.querySelector('#address');
   var mapPin = document.querySelector('.map__pins');
@@ -121,6 +122,7 @@
           inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop);
           pinMainButton.removeEventListener('click', onMainPinButtonClick);
         };
+
         pinMainButton.addEventListener('click', onMainPinButtonClick);
       }
 
