@@ -23,7 +23,7 @@
 
   // Добавление метки в разметку / на карту
 
-  var successHandler = function (arrayData) {
+  window.successHandler = function (arrayData) {
     var fragment = document.createDocumentFragment();
 
     arrayData.forEach(function (pinElement) {
@@ -36,8 +36,6 @@
   };
 
   // Вызов функции загрузки данных с сервера и обработки ошибок
-  window.backend.load(successHandler, window.backend.errorHandler);
+  window.backend.load(window.successHandler, window.backend.errorHandler);
 
-  // Вызов метода добавления меток в разметку / на карту, window.data.dataValues - массив данных
-  // window.data.dataValues - массив данных
 })();
