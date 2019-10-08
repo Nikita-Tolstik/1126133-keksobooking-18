@@ -39,21 +39,21 @@
     validateRoomsNumbers(evt);
   });
 
-  var formAd = document.querySelector('.ad-form');
+  var form = document.querySelector('.ad-form');
 
   // Валидация заголовка
-  var title = formAd.querySelector('#title');
+  var title = form.querySelector('#title');
   title.setAttribute('required', true);
   title.setAttribute('minlength', '30');
   title.setAttribute('maxlength', '100');
 
   // Валидация цены за ночь
-  var priceNight = formAd.querySelector('#price');
+  var priceNight = form.querySelector('#price');
   priceNight.setAttribute('required', true);
   priceNight.setAttribute('max', '1000000');
 
   // Валидация соответствия типа жилья и цены за ночь
-  var type = formAd.querySelector('#type');
+  var type = form.querySelector('#type');
   var typeOptions = type.querySelectorAll('option');
   var selectType = typeOptions[type.selectedIndex].value;
 
@@ -65,15 +65,12 @@
   };
 
   priceNight.setAttribute('placeholder', typePrice[selectType]);
-  priceNight.setAttribute('value', typePrice[selectType]);
-
 
   var validateType = function () {
     typeOptions.forEach(function (option) {
       if (option.selected) {
         priceNight.placeholder = typePrice[option.value];
         priceNight.setAttribute('min', typePrice[option.value]);
-        priceNight.setAttribute('value', typePrice[option.value]);
 
       }
     });
@@ -84,12 +81,12 @@
   });
 
   // Валидация адреса
-  var address = formAd.querySelector('#address');
+  var address = form.querySelector('#address');
   address.setAttribute('readonly', true);
 
   // Валидация времени заезда и выезда
-  var timeIn = formAd.querySelector('#timein');
-  var timeOut = formAd.querySelector('#timeout');
+  var timeIn = form.querySelector('#timein');
+  var timeOut = form.querySelector('#timeout');
 
   timeIn.addEventListener('input', function () {
     timeOut.value = timeIn.value;
@@ -98,4 +95,49 @@
   timeOut.addEventListener('input', function () {
     timeIn.value = timeOut.value;
   });
+
+  // Вызов функции отправки данных на сервер
+  form.addEventListener('submit', function (evt) {
+
+    window.backend.save(new FormData(form), successHandler, window.backend.errorHandler);
+
+    evt.preventDefault();
+  });
+
+  // Функция при успешной отрпавки данных на сервер
+  var successHandler = function (response) {
+    if (response) {
+      var map = document.querySelector('.map');
+      map.classList.add('map--faded');
+      form.classList.add('ad-form--disabled');
+
+      // Удаление всех меток
+      var pinAll = document.querySelectorAll('.offer__pin');
+      pinAll.forEach(function (pinElement) {
+        pinElement.remove();
+      });
+
+      // Удаление открытой карточки объявления
+      var popup = document.querySelector('.popup');
+      if (popup) {
+        popup.remove();
+      }
+
+      form.reset(); // Сброс формы
+      window.isInactive(); // Перевод страницы в неактивный режим
+
+      window.backend.load(window.successHandler, window.backend.errorHandler);
+
+      // Перевод страницы в активный режим
+      var pinMainButton = map.querySelector('.map__pin--main');
+
+      pinMainButton.addEventListener('mousedown', window.onMainPinPress);
+      pinMainButton.addEventListener('keydown', window.onEnterPress);
+
+      // Отрисовка окна успешной отправки данных
+      window.backend.successHandler();
+
+    }
+  };
+
 })();

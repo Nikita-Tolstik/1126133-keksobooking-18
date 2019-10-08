@@ -6,17 +6,16 @@
   var MIN_FIELDX = 0 - PINHALF_WIDTH;
   var MIN_FIELDY = 130;
   var MAX_FIELDY = 710;
-  var START_NUMBER = -1;
 
   // Добавлена возможность открывать и закрывать карточки объявлений по нажатию на метки
 
-
   // функции открытия и закрытия карточки объявления
   window.renderOpenPopup = function (arrayData) {
-    var pinAll = document.querySelectorAll('.offer__pin');
-    pinAll.forEach(function (elem) {
-      START_NUMBER++;
-      renderPinListener(elem, arrayData[START_NUMBER]); // window.data.dataValues - массив данных
+    var startNumber = -1;
+
+    collectPinAll().forEach(function (elem) {
+      startNumber++;
+      renderPinListener(elem, arrayData[startNumber]); // window.data.dataValues - массив данных
 
     });
   };
@@ -27,18 +26,28 @@
     pin.addEventListener('click', function (evt) {
       evt.preventDefault();
 
-      openPopup(card);
+      openPopup(pin, card);
     });
   };
 
 
   // Логика открытия и закрытия 1-ой карточки объявления
-  var openPopup = function (cardPopup) {
-    // Проверка того есть ли уже открытый попап
+  var openPopup = function (pin, cardPopup) {
     var mapCard = document.querySelector('.map__card');
+
+    // Проверка, есть ли уже метка с активным классом
+    collectPinAll().forEach(function (elemPin) {
+      if (elemPin.classList.contains('map__pin--active')) {
+        elemPin.classList.remove('map__pin--active');
+      }
+    });
+
+    // Проверка, есть ли уже открытый попап
     if (mapCard) {
       mapCard.remove();
     }
+
+    pin.classList.add('map__pin--active');
 
     window.card.renderCardFragment(cardPopup);
 
@@ -55,6 +64,7 @@
 
     var closePopup = function () {
       popup.remove();
+      pin.classList.remove('map__pin--active');
       document.removeEventListener('keydown', onCardEscPress);
     };
 
@@ -64,6 +74,11 @@
 
   };
 
+  // Функция находит все метки на карте
+  var collectPinAll = function () {
+    var pinAll = document.querySelectorAll('.offer__pin');
+    return pinAll;
+  };
 
   // Добавление возможности перемещения главной метки---------------------------------------------------------------------------------------------------------------
   var pinMainButton = document.querySelector('.map__pin--main');
@@ -110,7 +125,7 @@
       pinMainButton.style.top = offsetY + 'px';
       pinMainButton.style.left = offsetX + 'px';
 
-      inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop);
+      inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop + PIN_HEIGHT);
     };
 
     var onMouseUp = function (upEvt) {
@@ -119,7 +134,7 @@
       if (!dragged) {
         var onMainPinButtonClick = function (evtClick) {
           evtClick.preventDefault();
-          inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop);
+          inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop + PIN_HEIGHT);
           pinMainButton.removeEventListener('click', onMainPinButtonClick);
         };
 
