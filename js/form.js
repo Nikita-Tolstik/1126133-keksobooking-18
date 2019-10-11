@@ -123,7 +123,10 @@
         popup.remove();
       }
 
-      form.reset(); // Сброс формы
+      var mapFiltered = document.querySelector('.map__filters');
+
+      mapFiltered.reset(); // Сброс формы фильтров
+      form.reset(); // Сброс формы объявления
       window.isInactive(); // Перевод страницы в неактивный режим
 
       window.backend.load(window.successHandler, window.backend.errorHandler);
@@ -134,7 +137,7 @@
       pinMainButton.addEventListener('mousedown', window.onMainPinPress);
       pinMainButton.addEventListener('keydown', window.onEnterPress);
 
-      // Отрисовка окна успешной отправки данных
+      // Отрисовка окна успешной отправке данных
       window.backend.successHandler();
 
     }

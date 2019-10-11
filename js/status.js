@@ -66,11 +66,8 @@
       }
     });
 
-    // Отображение других объявлений на карте (меток)
-    var pinAll = document.querySelectorAll('.offer__pin');
-    pinAll.forEach(function (pinElement) {
-      pinElement.classList.remove('hidden');
-    });
+
+    window.updatePins(); // Вызов функции отрисовки меток на карте
 
     inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop + PIN_HEIGHT);
 
