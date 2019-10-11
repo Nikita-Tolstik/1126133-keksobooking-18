@@ -23,6 +23,7 @@
 
   var filteredPins;
   // Функция фильтрации объявления
+
   window.updatePins = function () {
     if (typeValue === 'any') {
       filteredPins = window.ads.slice().filter(function (elem) {
