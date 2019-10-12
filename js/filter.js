@@ -1,13 +1,12 @@
 'use strict';
 
 (function () {
-  var mapFiltered = document.querySelector('.map__filters');
-  var houseFiltered = mapFiltered.querySelector('#housing-type');
+  var houseFilter = window.util.mapFilter.querySelector('#housing-type');
 
   // Обработчик на форму фильтрации
 
-  var typeValue = houseFiltered.value; // Исходное значение поля 'any'
-  houseFiltered.addEventListener('change', function (evt) {
+  var typeValue = houseFilter.value; // Исходное значение поля 'any'
+  houseFilter.addEventListener('change', function (evt) {
     typeValue = evt.target.value; // Новое выбранное значение
     window.updatePins();
   });

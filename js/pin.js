@@ -23,20 +23,8 @@
   // Функция добавления меток в разметку / на карту
   window.appendPin = function (pins) {
 
-    var pinListElement = document.querySelector('.map__pins');
-
-    // Удаление уже открытой карточки
-    var mapCard = document.querySelector('.map__card');
-    if (mapCard) {
-      mapCard.remove();
-    }
-    // Удаление старых меток после смены фильтра
-    var pinMap = pinListElement.querySelectorAll('.offer__pin');
-    if (pinMap) {
-      pinMap.forEach(function (pin) {
-        pin.remove();
-      });
-    }
+    window.util.removeCard(); // Удаление открытой карточки объявления
+    window.util.removePin(); // Удаление всех меток
 
     // Проверка отображения определённого кол-ва объявлений
     var quantity = pins.length > MAX_PIN ? MAX_PIN : pins.length;
@@ -47,16 +35,8 @@
       fragment.appendChild(renderPin(pinElement));
     });
 
-    pinListElement.appendChild(fragment);
+    window.util.pinListElement.appendChild(fragment);
     window.renderOpenPopup(pins); // Вызов функции добавления возможности открытия и закрытия карточки объявления
   };
-
-
-  window.successHandler = function (data) {
-    window.ads = data; // Передача данных сервера в глобальную область видимости
-  };
-
-  // Вызов функции загрузки данных с сервера и обработки ошибок
-  window.backend.load(window.successHandler, window.backend.errorHandler);
 
 })();
