@@ -1,26 +1,17 @@
 'use strict';
 
 (function () {
-  var PINHALF_WIDTH = 32;
+
   var ONE_GUEST = '1';
-  var PINHALF_HEIGHT = 30;
-  var PIN_HEIGHT = 80;
 
+  var adFormfieldsetAll = window.util.formAd.querySelectorAll('fieldset');
+  var capacityOptions = document.querySelectorAll('#capacity option');
 
-  var map = document.querySelector('.map');
-  var adForm = document.querySelector('.ad-form');
-  var adFormfieldsetAll = adForm.querySelectorAll('fieldset');
-  var capacityOptionDisabled = document.querySelectorAll('#capacity option');
+  var mapFilterChildren = window.util.mapFilter.children;
+  var mapFilters = Array.from(mapFilterChildren);
 
-  var mapFilters = document.querySelector('.map__filters');
-  var mapFiltersChildren = mapFilters.children;
-  var mapFiltersAll = Array.from(mapFiltersChildren);
-
-  var pinMainButton = map.querySelector('.map__pin--main');
-  var inputAddress = document.querySelector('#address');
-
-  var pinMainX = pinMainButton.style.left;
-  var pinMainY = pinMainButton.style.top;
+  var pinMainX = window.util.pinMainButton.style.left;
+  var pinMainY = window.util.pinMainButton.style.top;
 
   // Функция неактивного состояния страницы
   window.isInactive = function () {
@@ -29,53 +20,59 @@
       element.disabled = true;
     });
 
-    mapFiltersAll.forEach(function (element) {
+    mapFilters.forEach(function (element) {
       element.disabled = true;
     });
 
-    pinMainButton.style.left = pinMainX;
-    pinMainButton.style.top = pinMainY;
+    window.util.pinMainButton.style.left = pinMainX;
+    window.util.pinMainButton.style.top = pinMainY;
 
-    inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop + PINHALF_HEIGHT);
+    window.util.inputAddress.value = (window.util.pinMainButton.offsetLeft + window.draggable.PINHALF_SIZE) + ', ' + (window.util.pinMainButton.offsetTop + window.draggable.PINHALF_SIZE);
   };
 
 
   window.isInactive(); // Функция неактивного состояния страницы
 
+
   // Активное состояние страницы
   var openMap = function () {
-    map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
+    window.util.map.classList.remove('map--faded');
+    window.util.formAd.classList.remove('ad-form--disabled');
 
     adFormfieldsetAll.forEach(function (element) {
       element.disabled = false;
     });
 
-    mapFiltersAll.forEach(function (element) {
+    mapFilters.forEach(function (element) {
       element.disabled = false;
     });
 
-    capacityOptionDisabled.forEach(function (elem) {
-      elem.disabled = true;
-      if (elem.selected) {
-        elem.selected = false;
+    capacityOptions.forEach(function (element) {
+      element.disabled = true;
+      if (element.selected) {
+        element.selected = false;
       }
-      if (elem.value === ONE_GUEST) {
-        elem.selected = true;
-        elem.disabled = false;
+      if (element.value === ONE_GUEST) {
+        element.selected = true;
+        element.disabled = false;
       }
     });
 
-    // Отображение других объявлений на карте (меток)
-    var pinAll = document.querySelectorAll('.offer__pin');
-    pinAll.forEach(function (pinElement) {
-      pinElement.classList.remove('hidden');
-    });
+    // Загрузка данных с сервера
+    var onDataLoad = function (data) {
+      window.ads = data; // Передача данных с сервера в глобальную область видимости
 
-    inputAddress.value = (pinMainButton.offsetLeft + PINHALF_WIDTH) + ', ' + (pinMainButton.offsetTop + PIN_HEIGHT);
+      window.updatePins(); // Вызов функции отрисовки меток на карте
+    };
 
-    pinMainButton.removeEventListener('keydown', window.onEnterPress);
-    pinMainButton.removeEventListener('mousedown', window.onMainPinPress);
+    // Вызов функции загрузки данных с сервера и обработки ошибок
+    window.backend.load(onDataLoad, window.backend.onErrorShow);
+
+
+    window.util.inputAddress.value = (window.util.pinMainButton.offsetLeft + window.draggable.PINHALF_SIZE) + ', ' + (window.util.pinMainButton.offsetTop + window.draggable.PIN_HEIGHT);
+
+    window.util.pinMainButton.removeEventListener('keydown', window.onEnterPress);
+    window.util.pinMainButton.removeEventListener('mousedown', window.onMainPinPress);
   };
 
 
@@ -90,9 +87,9 @@
     openMap();
   };
 
-  pinMainButton.addEventListener('mousedown', window.onMainPinPress);
+  window.util.pinMainButton.addEventListener('mousedown', window.onMainPinPress);
 
-  pinMainButton.addEventListener('keydown', window.onEnterPress);
+  window.util.pinMainButton.addEventListener('keydown', window.onEnterPress);
 
 
 })();

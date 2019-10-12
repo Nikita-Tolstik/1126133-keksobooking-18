@@ -4,11 +4,11 @@
 
 (function () {
 
-  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var pinListElement = document.querySelector('.map__pins');
+  var MAX_PIN = 5;
 
   // Формирование pin (метки)
   var renderPin = function (dataOffer) {
+    var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
     var pinElement = pinTemplate.cloneNode(true);
 
     pinElement.style.left = dataOffer.location.x + 'px';
@@ -16,26 +16,27 @@
     pinElement.querySelector('img').src = dataOffer.author.avatar;
     pinElement.querySelector('img').alt = dataOffer.offer.title;
     pinElement.classList.add('offer__pin');
-    pinElement.classList.add('hidden');
 
     return pinElement;
   };
 
-  // Добавление метки в разметку / на карту
+  // Функция добавления меток в разметку / на карту
+  window.appendPin = function (pins) {
 
-  window.successHandler = function (arrayData) {
+    window.util.removeCard(); // Удаление открытой карточки объявления
+    window.util.removePin(); // Удаление всех меток
+
+    // Проверка отображения определённого кол-ва объявлений
+    var quantity = pins.length > MAX_PIN ? MAX_PIN : pins.length;
     var fragment = document.createDocumentFragment();
 
-    arrayData.forEach(function (pinElement) {
+    // Отрисовка определённого кол-ва объявлений
+    pins.slice(0, quantity).forEach(function (pinElement) {
       fragment.appendChild(renderPin(pinElement));
     });
 
-    pinListElement.appendChild(fragment);
-
-    window.renderOpenPopup(arrayData); // Вызов функции добавления возможности открытия и закрытия карточки объявления
+    window.util.pinListElement.appendChild(fragment);
+    window.renderOpenPopup(pins); // Вызов функции добавления возможности открытия и закрытия карточки объявления
   };
-
-  // Вызов функции загрузки данных с сервера и обработки ошибок
-  window.backend.load(window.successHandler, window.backend.errorHandler);
 
 })();

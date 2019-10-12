@@ -4,37 +4,33 @@
 
   var URL_GET = 'https://js.dump.academy/keksobooking/data';
   var GET = 'GET';
-
   var URL_POST = 'https://js.dump.academy/keksobooking';
   var POST = 'POST';
-
   var TIMEOUT = 1000000;
   var STATUS_OK = 200;
   var DATA_NULL = null;
 
-  var main = document.querySelector('main');
-
   window.backend = {
     // Функция отправки данных на сервер
-    save: function (data, onLoad, onError) {
+    post: function (data, onLoad, onError) {
 
-      checkStatus(data, onLoad, onError, URL_POST, POST);
+      postRequest(data, onLoad, onError, URL_POST, POST);
     },
 
     // Функция загрузки данных с сервера
     load: function (onLoad, onError) {
 
-      checkStatus(DATA_NULL, onLoad, onError, URL_GET, GET);
+      postRequest(DATA_NULL, onLoad, onError, URL_GET, GET);
     },
 
     // Функция отображения ошибок при загрузке данных, тайм-ауты (отрисовка элемента error в DOM)
-    errorHandler: function (errorMessage) {
+    onErrorShow: function (errorMessage) {
       var templateError = document.querySelector('#error').content.querySelector('.error');
       var errorElement = templateError.cloneNode(true);
       var closeError = errorElement.querySelector('.error__button');
 
       errorElement.querySelector('.error__message').textContent = errorMessage;
-      main.insertAdjacentElement('beforeend', errorElement);
+      window.util.main.insertAdjacentElement('beforeend', errorElement);
 
 
       var onErrorEscPress = function (evtEsc) {
@@ -60,10 +56,10 @@
 
 
     // Функция отображения успешного результата при отправке данных формы (отрисовка элемента error в DOM)
-    successHandler: function () {
+    showSuccess: function () {
       var templateSuccess = document.querySelector('#success').content.querySelector('.success');
       var successElement = templateSuccess.cloneNode(true);
-      main.insertAdjacentElement('beforeend', successElement);
+      window.util.main.insertAdjacentElement('beforeend', successElement);
 
 
       var onSuccessEscPress = function (evtEsc) {
@@ -88,8 +84,8 @@
 
   };
 
-  // Функция отправки данных и проверки запросов на ошибки
-  var checkStatus = function (data, onLoad, onError, url, method) {
+  // Функция отправки запросов на сервер
+  var postRequest = function (data, onLoad, onError, url, method) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 

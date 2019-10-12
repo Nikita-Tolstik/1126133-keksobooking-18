@@ -3,29 +3,36 @@
 
 // Проверка валидации комнат и гостей
 (function () {
-  var validateRoomsNumbers = function (evt) {
-    var roomsCapacityMap = {
+
+  var Limit = {
+    MIN_LENGTH: '30',
+    MAX_LENGTH: '100',
+    MAX_PRICE: '1000000'
+  };
+
+  var validateGuestNumber = function (evt) {
+    var roomMap = {
       '1': ['1'],
       '2': ['1', '2'],
       '3': ['1', '2', '3'],
       '100': ['0'],
     };
 
-    var guestsCapacityMap = {
+    var guestMap = {
       '1': '2',
       '2': '1',
       '3': '0',
       '100': '3'
     };
 
-    var selectedRoom = evt.target.value;
-    var guests = roomsCapacityMap[selectedRoom];
+    var selectRoom = evt.target.value;
+    var guests = roomMap[selectRoom];
     var guestSelect = document.querySelector('#capacity');
-    var guestsOption = guestSelect.querySelectorAll('option');
+    var capacityOptions = guestSelect.querySelectorAll('option');
 
-    guestSelect.selectedIndex = guestsCapacityMap[selectedRoom];
+    guestSelect.selectedIndex = guestMap[selectRoom];
 
-    guestsOption.forEach(function (option) {
+    capacityOptions.forEach(function (option) {
       if (guests.includes(option.value)) {
         option.disabled = false;
       } else {
@@ -34,43 +41,42 @@
     });
   };
 
-  var roomsSelect = document.querySelector('[name=rooms]');
-  roomsSelect.addEventListener('input', function (evt) {
-    validateRoomsNumbers(evt);
+  var roomSelect = document.querySelector('[name=rooms]');
+  roomSelect.addEventListener('input', function (evt) {
+    validateGuestNumber(evt);
   });
 
-  var form = document.querySelector('.ad-form');
 
   // Валидация заголовка
-  var title = form.querySelector('#title');
+  var title = window.util.formAd.querySelector('#title');
   title.setAttribute('required', true);
-  title.setAttribute('minlength', '30');
-  title.setAttribute('maxlength', '100');
+  title.setAttribute('minlength', Limit.MIN_LENGTH);
+  title.setAttribute('maxlength', Limit.MAX_LENGTH);
 
   // Валидация цены за ночь
-  var priceNight = form.querySelector('#price');
+  var priceNight = window.util.formAd.querySelector('#price');
   priceNight.setAttribute('required', true);
-  priceNight.setAttribute('max', '1000000');
+  priceNight.setAttribute('max', Limit.MAX_PRICE);
 
   // Валидация соответствия типа жилья и цены за ночь
-  var type = form.querySelector('#type');
+  var type = window.util.formAd.querySelector('#type');
   var typeOptions = type.querySelectorAll('option');
   var selectType = typeOptions[type.selectedIndex].value;
 
-  var typePrice = {
+  var priceMap = {
     'bungalo': '0',
     'flat': '1000',
     'house': '5000',
     'palace': '10000'
   };
 
-  priceNight.setAttribute('placeholder', typePrice[selectType]);
+  priceNight.setAttribute('placeholder', priceMap[selectType]);
 
   var validateType = function () {
     typeOptions.forEach(function (option) {
       if (option.selected) {
-        priceNight.placeholder = typePrice[option.value];
-        priceNight.setAttribute('min', typePrice[option.value]);
+        priceNight.placeholder = priceMap[option.value];
+        priceNight.setAttribute('min', priceMap[option.value]);
 
       }
     });
@@ -81,12 +87,11 @@
   });
 
   // Валидация адреса
-  var address = form.querySelector('#address');
-  address.setAttribute('readonly', true);
+  window.util.inputAddress.setAttribute('readonly', true);
 
   // Валидация времени заезда и выезда
-  var timeIn = form.querySelector('#timein');
-  var timeOut = form.querySelector('#timeout');
+  var timeIn = window.util.formAd.querySelector('#timein');
+  var timeOut = window.util.formAd.querySelector('#timeout');
 
   timeIn.addEventListener('input', function () {
     timeOut.value = timeIn.value;
@@ -96,48 +101,36 @@
     timeIn.value = timeOut.value;
   });
 
+
   // Вызов функции отправки данных на сервер
-  form.addEventListener('submit', function (evt) {
-
-    window.backend.save(new FormData(form), successHandler, window.backend.errorHandler);
-
+  window.util.formAd.addEventListener('submit', function (evt) {
+    window.backend.post(new FormData(window.util.formAd), onSuccessPost, window.backend.onErrorShow);
     evt.preventDefault();
   });
 
-  // Функция при успешной отрпавки данных на сервер
-  var successHandler = function (response) {
-    if (response) {
-      var map = document.querySelector('.map');
-      map.classList.add('map--faded');
-      form.classList.add('ad-form--disabled');
 
-      // Удаление всех меток
-      var pinAll = document.querySelectorAll('.offer__pin');
-      pinAll.forEach(function (pinElement) {
-        pinElement.remove();
-      });
+  // Функция при успешной отрпавке данных на сервер, возвращает страницу в начальное состояние
+  var onSuccessPost = function () {
 
-      // Удаление открытой карточки объявления
-      var popup = document.querySelector('.popup');
-      if (popup) {
-        popup.remove();
-      }
+    window.util.map.classList.add('map--faded');
+    window.util.formAd.classList.add('ad-form--disabled');
 
-      form.reset(); // Сброс формы
-      window.isInactive(); // Перевод страницы в неактивный режим
+    // Удаление открытой карточки объявления
+    window.util.removeCard();
 
-      window.backend.load(window.successHandler, window.backend.errorHandler);
+    // Удаление всех меток
+    window.util.removePin();
 
-      // Перевод страницы в активный режим
-      var pinMainButton = map.querySelector('.map__pin--main');
+    window.util.mapFilter.reset(); // Сброс формы фильтров
+    window.util.formAd.reset(); // Сброс формы объявления
+    window.isInactive(); // Перевод страницы в неактивный режим
 
-      pinMainButton.addEventListener('mousedown', window.onMainPinPress);
-      pinMainButton.addEventListener('keydown', window.onEnterPress);
+    // Перевод страницы в активный режим
+    window.util.pinMainButton.addEventListener('mousedown', window.onMainPinPress);
+    window.util.pinMainButton.addEventListener('keydown', window.onEnterPress);
 
-      // Отрисовка окна успешной отправки данных
-      window.backend.successHandler();
-
-    }
+    // Отображение окна успешной отправки данных
+    window.backend.showSuccess();
   };
 
 })();
