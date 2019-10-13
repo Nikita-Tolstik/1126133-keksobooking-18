@@ -4,6 +4,7 @@
 
   var START_VALUE = 'any';
   var EMPTY_ARRAY = [];
+  var ONE_ELEMENT = 1;
 
 
   // Обработчики на форму фильтрации
@@ -11,6 +12,7 @@
   var priceValue = START_VALUE;
   var roomValue = START_VALUE;
   var guestValue = START_VALUE;
+
 
   // Добавление обработчиков на форму фильтрации по типу жилья, цене, кол-ву комнат, кол-ву гостей
   window.util.mapFilter.querySelectorAll('select').forEach(function (elem) {
@@ -30,8 +32,8 @@
           guestValue = evt.target.value;
           break;
       }
-
-      window.debounce(window.updatePins());
+      // Вызов функции устранения дребезга
+      onSelectChange();
     });
   });
 
@@ -44,23 +46,24 @@
     elem.addEventListener('change', function (evt) {
       var target = evt.target.value;
       var featureChecked = evt.target.checked;
-      // проверка, выбранно ли данное удобство (если да - удалить, если нет - добавить)
-      if (!featureChecked) {
-        featureValues.splice(featureValues.indexOf(target), 1);
-      } else {
+      // проверка, поставили или убрали чекбокс с данного удобства (если поставили - добавить, если убрали - удалить)
+      if (featureChecked) {
         featureValues.push(target);
+      } else {
+        featureValues.splice(featureValues.indexOf(target), ONE_ELEMENT);
       }
-      window.updatePins();
+      // Вызов функции устранения дребезга
+      onSelectChange();
     });
   });
 
 
-  // Функция фильтрации объявления
   var filteredPins;
+  // Функция фильтрации объявления
   window.updatePins = function () {
     filteredPins = window.ads.slice();
 
-    // Первоначальная фильтрация при запуске
+    // Первоначальное отображение всех меток при запуске
     filteredPins = filteredPins.filter(function (elem) {
       return elem;
     });
@@ -117,6 +120,10 @@
     window.appendPin(filteredPins);
   };
 
+  // Функция устранения дребезга
+  var onSelectChange = window.debounce(function () {
+    window.updatePins();
+  });
 
   // Возвращает изначальные значения фильтров карты после отправки формы
   window.returnValue = function () {
