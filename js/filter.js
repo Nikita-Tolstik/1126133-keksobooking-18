@@ -1,61 +1,54 @@
 'use strict';
 
 (function () {
-  var houseFilter = window.util.mapFilter.querySelector('#housing-type');
 
-  // Обработчик на форму фильтрации
-
-  // По типу жилья
-  var typeValue = houseFilter.value; // Исходное значение поля 'any'
-  houseFilter.addEventListener('input', function (evt) {
-    typeValue = evt.target.value; // Новое выбранное значение
-    window.updatePins();
-  });
-
-  // По цене
-  var priceFilter = window.util.mapFilter.querySelector('#housing-price');
-  var priceValue = priceFilter.value; // Исходное значение поля 'any'
-  priceFilter.addEventListener('input', function (evt) {
-    priceValue = evt.target.value; // Новое выбранное значение
-    window.updatePins();
-  });
+  var START_VALUE = 'any';
+  var EMPTY_ARRAY = [];
 
 
-  // По кол-ву комнат
-  var roomFilter = window.util.mapFilter.querySelector('#housing-rooms');
-  var roomValue = roomFilter.value; // Исходное значение поля 'any'
-  roomFilter.addEventListener('input', function (evt) {
-    roomValue = evt.target.value; // Новое выбранное значение
-    window.updatePins();
-  });
+  // Обработчики на форму фильтрации
+  var typeValue = START_VALUE;
+  var priceValue = START_VALUE;
+  var roomValue = START_VALUE;
+  var guestValue = START_VALUE;
 
+  // Добавление обработчиков на форму фильтрации по типу жилья, цене, кол-ву комнат, кол-ву гостей
+  window.util.mapFilter.querySelectorAll('select').forEach(function (elem) {
+    elem.addEventListener('input', function (evt) {
 
-  // По кол-ву гостей
-  var guestFilter = window.util.mapFilter.querySelector('#housing-guests');
-  var guestValue = guestFilter.value; // Исходное значение поля 'any'
-  guestFilter.addEventListener('input', function (evt) {
-    guestValue = evt.target.value; // Новое выбранное значение
-    window.updatePins();
+      switch (elem.name) {
+        case 'housing-type':
+          typeValue = evt.target.value;
+          break;
+        case 'housing-price':
+          priceValue = evt.target.value;
+          break;
+        case 'housing-rooms':
+          roomValue = evt.target.value;
+          break;
+        case 'housing-guests':
+          guestValue = evt.target.value;
+          break;
+      }
+
+      window.debounce(window.updatePins());
+    });
   });
 
 
+  // удобства
   var features = window.util.mapFilter.querySelectorAll('fieldset input');
+  var featureValues = [];
 
-  var featureValue = [];
-  var featureChecked;
   features.forEach(function (elem) {
     elem.addEventListener('change', function (evt) {
-
       var target = evt.target.value;
-
-
-      featureChecked = evt.target.checked;
+      var featureChecked = evt.target.checked;
+      // проверка, выбранно ли данное удобство (если да - удалить, если нет - добавить)
       if (!featureChecked) {
-
-        console.log(featureValue.indexOf(target));
-        featureValue.splice(featureValue.indexOf(target), 1);
+        featureValues.splice(featureValues.indexOf(target), 1);
       } else {
-        featureValue.push(target);
+        featureValues.push(target);
       }
       window.updatePins();
     });
@@ -64,72 +57,74 @@
 
   // Функция фильтрации объявления
   var filteredPins;
-
   window.updatePins = function () {
     filteredPins = window.ads.slice();
 
-
+    // Первоначальная фильтрация при запуске
     filteredPins = filteredPins.filter(function (elem) {
-      return elem !== undefined;
+      return elem;
     });
 
-
-    if (typeValue !== 'any') {
+    // Фильтрация по типу жилья
+    if (typeValue !== START_VALUE) {
       filteredPins = filteredPins.filter(function (elem) {
         return elem.offer.type === typeValue;
       });
     }
 
-    if (priceValue !== 'any') {
+    // Фильтрация по цене
+    if (priceValue !== START_VALUE) {
       filteredPins = filteredPins.filter(function (elem) {
-
-        if (priceValue === 'low') {
-          return elem.offer.price >= 0 && elem.offer.price < 10000;
-        } else if (priceValue === 'middle') {
-          return elem.offer.price >= 10000 && elem.offer.price < 50000;
+        switch (priceValue) {
+          case 'middle':
+            return elem.offer.price >= 10000 && elem.offer.price < 50000;
+          case 'high':
+            return elem.offer.price >= 50000 && elem.offer.price < 1000000;
         }
-        return elem.offer.price >= 50000 && elem.offer.price < 1000000;
+        return elem.offer.price >= 0 && elem.offer.price < 10000;
       });
     }
 
 
-    if (roomValue !== 'any') {
+    // Фильтрация по кол-ву комнат
+    if (roomValue !== START_VALUE) {
       filteredPins = filteredPins.filter(function (elem) {
         return elem.offer.rooms === parseInt(roomValue, 10);
       });
     }
 
-    if (guestValue !== 'any') {
+    // Фильтрация по кол-ву гостей
+    if (guestValue !== START_VALUE) {
       filteredPins = filteredPins.filter(function (elem) {
         return elem.offer.guests === parseInt(guestValue, 10);
       });
     }
 
-    console.log(featureValue);
-    if (featureChecked || !featureChecked) {
-      filteredPins = filteredPins.filter(function (elem) {
-        var ffffffff = false;
-        if (elem.offer.features !== []) {
+    // Фильтрация по удобствам
+    filteredPins = filteredPins.filter(function (elem) {
+      var check = false;
 
-          ffffffff = featureValue.every(function (element) {
+      // проверка, есть ли в списке каждое выбранное удобство
+      if (elem.offer.features !== EMPTY_ARRAY) {
+        check = featureValues.every(function (element) {
+          return elem.offer.features.includes(element);
+        });
+      }
 
-            return elem.offer.features.includes(element);
-          });
-        }
-        console.log(ffffffff);
-        return ffffffff;
-      });
-    }
+      return check;
+    });
 
     window.appendPin(filteredPins);
   };
 
 
-  // Слушатель события отправки формы на сервер, восстанавливает исходное значение
-  // document.addEventListener('submit', function (evt) {
-  //   evt.preventDefault();
-  //   typeValue = 'any';
-  //   window.updatePins();
-  // });
+  // Возвращает изначальные значения фильтров карты после отправки формы
+  window.returnValue = function () {
+    typeValue = START_VALUE;
+    priceValue = START_VALUE;
+    roomValue = START_VALUE;
+    guestValue = START_VALUE;
+    featureValues = [];
+  };
 
 })();
