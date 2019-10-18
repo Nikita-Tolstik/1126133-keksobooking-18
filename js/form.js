@@ -133,11 +133,10 @@
     window.backend.showSuccess();
 
     // Возвращает изначальные значения фильтров карты
-    window.returnValue();
+    window.resetFilter();
+
+    // Сброс фото аватара
+    window.resetImage();
   };
 
 })();
-
-// 1. Проверить название функций callback
-// 2. Сделать reset по ТЗ
-// 3.
