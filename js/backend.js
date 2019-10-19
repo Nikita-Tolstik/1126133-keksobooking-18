@@ -26,11 +26,11 @@
     // Функция отображения ошибок при загрузке данных, тайм-ауты (отрисовка элемента error в DOM)
     onErrorShow: function (errorMessage) {
       var templateError = document.querySelector('#error').content.querySelector('.error');
-      var errorElement = templateError.cloneNode(true);
-      var closeError = errorElement.querySelector('.error__button');
+      var errorPopup = templateError.cloneNode(true);
+      var closeError = errorPopup.querySelector('.error__button');
 
-      errorElement.querySelector('.error__message').textContent = errorMessage;
-      window.util.main.insertAdjacentElement('beforeend', errorElement);
+      errorPopup.querySelector('.error__message').textContent = errorMessage;
+      window.util.main.insertAdjacentElement('beforeend', errorPopup);
 
 
       var onErrorEscPress = function (evtEsc) {
@@ -42,7 +42,7 @@
       };
 
       var closePopupError = function () {
-        errorElement.remove();
+        errorPopup.remove();
 
         document.removeEventListener('keydown', onErrorEscPress);
         closeError.removeEventListener('click', onErrorClick);
@@ -58,8 +58,8 @@
     // Функция отображения успешного результата при отправке данных формы (отрисовка элемента error в DOM)
     showSuccess: function () {
       var templateSuccess = document.querySelector('#success').content.querySelector('.success');
-      var successElement = templateSuccess.cloneNode(true);
-      window.util.main.insertAdjacentElement('beforeend', successElement);
+      var successPopup = templateSuccess.cloneNode(true);
+      window.util.main.insertAdjacentElement('beforeend', successPopup);
 
 
       var onSuccessEscPress = function (evtEsc) {
@@ -71,7 +71,7 @@
       };
 
       var closePopupSuccess = function () {
-        successElement.remove();
+        successPopup.remove();
 
         document.removeEventListener('keydown', onSuccessEscPress);
         window.removeEventListener('click', onSuccessClick);

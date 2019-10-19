@@ -37,7 +37,7 @@
       };
 
       // Определение границ, за которые не выходит метка
-      var maxFieldX = window.util.pinListElement.offsetWidth;
+      var maxFieldX = window.util.pinList.offsetWidth;
       var offsetX = window.util.pinMainButton.offsetLeft - shift.x;
       if (window.util.pinMainButton.offsetLeft - shift.x <= MIN_FIELDX) {
         offsetX = MIN_FIELDX;

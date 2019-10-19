@@ -17,7 +17,7 @@
 
     pinMainButton: document.querySelector('.map__pin--main'),
 
-    pinListElement: document.querySelector('.map__pins'),
+    pinList: document.querySelector('.map__pins'),
 
     formAd: document.querySelector('.ad-form'),
 
@@ -44,5 +44,3 @@
 
   };
 })();
-
-// window.util.removeCard
