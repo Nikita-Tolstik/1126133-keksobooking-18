@@ -2,6 +2,9 @@
 
 (function () {
 
+  var TEXT_HOUSE = 'Фотография жилья';
+  var WIDTH = 40;
+  var HEIGHT = 44;
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 
@@ -37,7 +40,7 @@
         var reader = new FileReader();
 
         reader.addEventListener('load', function () {
-          onChangeImage(preview, reader.result);
+          onChangeImage(reader.result, preview);
         });
 
         reader.readAsDataURL(file);
@@ -46,12 +49,12 @@
   };
 
   // Функция обратного вызова загрузки аватара
-  var onAvatarChange = function (preview, dataUrl) {
+  var onAvatarChange = function (dataUrl, preview) {
     preview.src = dataUrl;
   };
 
   // Функция обратного вызова загрузки картинок жилья
-  var onImageChange = function (preview, dataUrl) {
+  var onImageChange = function (dataUrl) {
 
     getImages().forEach(function (elem) {
       if (!elem.childNodes[0]) {
@@ -59,9 +62,14 @@
       }
     });
 
-    var containerBlock = preview.cloneNode(true);
-    var imageHouse = avatarPreview.cloneNode(true);
+    var containerBlock = document.createElement('div');
+    containerBlock.classList.add('ad-form__photo');
+
+    var imageHouse = document.createElement('img');
     imageHouse.src = dataUrl;
+    imageHouse.alt = TEXT_HOUSE;
+    imageHouse.style.width = WIDTH + 'px';
+    imageHouse.style.height = HEIGHT + 'px';
 
     containerBlock.appendChild(imageHouse);
     photoContainer.appendChild(containerBlock);
@@ -80,8 +88,8 @@
     avatarPreview.src = originalAvatarPreview; // Сброс аватарки
 
     // Сброс картинок жилья
-    getImages().forEach(function (elem) {
-      elem.remove();
+    getImages().forEach(function (image) {
+      image.remove();
     });
 
     photoContainer.appendChild(housePreview);
