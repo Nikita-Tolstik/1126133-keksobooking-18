@@ -10,7 +10,7 @@
 
   var avatarFile = window.util.formAd.querySelector('.ad-form-header__input');
   var avatarPreview = window.util.formAd.querySelector('.ad-form-header__preview img');
-  var originalAvatarPreview = avatarPreview.src;
+  var originalPreview = avatarPreview.src;
 
   var houseFile = window.util.formAd.querySelector('.ad-form__input');
   var housePreview = window.util.formAd.querySelector('.ad-form__photo');
@@ -85,7 +85,7 @@
   // Сброс картинок
   window.resetImage = function () {
 
-    avatarPreview.src = originalAvatarPreview; // Сброс аватарки
+    avatarPreview.src = originalPreview; // Сброс аватарки
 
     // Сброс картинок жилья
     getImages().forEach(function (image) {

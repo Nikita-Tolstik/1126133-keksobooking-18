@@ -18,14 +18,13 @@
   // Создание объявления
   var renderCard = function (data) {
     var cardTemplate = document.querySelector('#card').content;
-
     var cardAd = cardTemplate.cloneNode(true);
 
     cardAd.querySelector('.popup__title').textContent = data.offer.title;
     cardAd.querySelector('.popup__text--address').textContent = data.offer.address;
 
     var textPrice = cardAd.querySelector('.popup__text--price');
-    if (data.offer.g === undefined) {
+    if (data.offer.price === undefined) {
       textPrice.classList.add('hidden');
     } else {
       textPrice.textContent = data.offer.price + PRICE_TEXT;
@@ -73,10 +72,10 @@
     if (data.offer.features === undefined) {
       listPopupFeatures.classList.add('hidden');
     } else {
-      features.forEach(function (num) {
-        var classFeature = num.className;
+      features.forEach(function (feature) {
+        var classFeature = feature.className;
         if (data.offer.features.indexOf(classFeature.slice(CLASS_FEATURE)) === NOT_FOUND) {
-          listPopupFeatures.removeChild(num);
+          listPopupFeatures.removeChild(feature);
         }
       });
     }
@@ -91,8 +90,7 @@
     renderCardFragment: function (offer) {
 
       var mapFiltersContainer = document.querySelector('.map__filters-container');
-      var elem = renderCard(offer);
-      window.util.map.insertBefore(elem, mapFiltersContainer);
+      window.util.map.insertBefore(renderCard(offer), mapFiltersContainer);
     }
   };
 

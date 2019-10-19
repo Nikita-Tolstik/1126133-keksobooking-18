@@ -109,7 +109,7 @@
   // Обработчик отправки формы на сервер
   window.util.formAd.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.post(new FormData(window.util.formAd), onSuccessPost, window.backend.onErrorShow); // Вызов функции отправки данных на сервер
+    window.backend.post(new FormData(window.util.formAd), onSuccessPost, window.backend.onErrorLoad); // Вызов функции отправки данных на сервер
   });
 
 
@@ -117,7 +117,7 @@
   buttonReset.addEventListener('click', function (evt) {
     evt.preventDefault();
 
-    resetFormAd(); // сброс формы объявления и перевода страницы в неактивное состояние
+    resetFormAd(); // сброс формы объявления и перевод страницы в неактивное состояние
   });
 
 
@@ -145,7 +145,7 @@
 
     window.util.mapFilter.reset(); // Сброс формы фильтров
     window.util.formAd.reset(); // Сброс формы объявления
-    window.isInactive(); // Перевод страницы в неактивный режим
+    window.setInactive(); // Перевод страницы в неактивный режим
 
     // Перевод страницы в активный режим
     window.util.pinMainButton.addEventListener('mousedown', window.onMainPinPress);

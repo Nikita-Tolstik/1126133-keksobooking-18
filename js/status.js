@@ -4,7 +4,7 @@
 
   var ONE_GUEST = '1';
 
-  var adFormfieldsetAll = window.util.formAd.querySelectorAll('fieldset');
+  var adFormfieldsets = window.util.formAd.querySelectorAll('fieldset');
   var capacityOptions = document.querySelectorAll('#capacity option');
   window.filterContainer = window.util.map.querySelector('.map__filters-container');
 
@@ -15,11 +15,11 @@
   var pinMainY = window.util.pinMainButton.style.top;
 
   // Функция неактивного состояния страницы
-  window.isInactive = function () {
+  window.setInactive = function () {
 
     window.filterContainer.classList.add('hidden');
 
-    adFormfieldsetAll.forEach(function (element) {
+    adFormfieldsets.forEach(function (element) {
       element.disabled = true;
     });
 
@@ -34,7 +34,7 @@
   };
 
 
-  window.isInactive(); // Функция неактивного состояния страницы
+  window.setInactive(); // Функция неактивного состояния страницы
 
 
   // Активное состояние страницы
@@ -42,7 +42,7 @@
     window.util.map.classList.remove('map--faded');
     window.util.formAd.classList.remove('ad-form--disabled');
 
-    adFormfieldsetAll.forEach(function (element) {
+    adFormfieldsets.forEach(function (element) {
       element.disabled = false;
     });
 
@@ -66,10 +66,12 @@
       window.ads = data; // Передача данных с сервера в глобальную область видимости
 
       window.updatePins(); // Вызов функции отрисовки меток на карте
+      // Отображение фильтров
+      window.filterContainer.classList.remove('hidden');
     };
 
     // Вызов функции загрузки данных с сервера и обработки ошибок
-    window.backend.load(onDataLoad, window.backend.onErrorShow);
+    window.backend.load(onDataLoad, window.backend.onErrorLoad);
 
 
     window.util.inputAddress.value = (window.util.pinMainButton.offsetLeft + window.draggable.PINHALF_SIZE) + ', ' + (window.util.pinMainButton.offsetTop + window.draggable.PIN_HEIGHT);

@@ -5,12 +5,12 @@
   var START_NUMBER = -1;
 
   // функции открытия и закрытия карточки объявления
-  window.renderOpenPopup = function (data) {
+  window.renderPopup = function (data) {
     var start = START_NUMBER;
 
-    collectPins().forEach(function (elem) {
+    getPins().forEach(function (element) {
       start++;
-      renderPinListener(elem, data[start]); // window.data.dataValues - массив данных
+      renderPinListener(element, data[start]); // window.data.dataValues - массив данных
 
     });
   };
@@ -30,9 +30,9 @@
   var openPopup = function (pin, cardPopup) {
 
     // Проверка, есть ли уже метка с активным классом
-    collectPins().forEach(function (elemPin) {
-      if (elemPin.classList.contains('map__pin--active')) {
-        elemPin.classList.remove('map__pin--active');
+    getPins().forEach(function (elementPin) {
+      if (elementPin.classList.contains('map__pin--active')) {
+        elementPin.classList.remove('map__pin--active');
       }
     });
 
@@ -67,9 +67,10 @@
   };
 
   // Функция находит все метки на карте
-  var collectPins = function () {
+  var getPins = function () {
     var pins = document.querySelectorAll('.offer__pin');
     return pins;
   };
 
 })();
+

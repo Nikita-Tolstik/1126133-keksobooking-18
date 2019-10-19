@@ -2,10 +2,10 @@
 
 (function () {
 
-  var URL_GET = 'https://js.dump.academy/keksobooking/data';
-  var GET = 'GET';
+  var URL_REQUEST = 'https://js.dump.academy/keksobooking/data';
+  var DATA_REQUEST = 'GET';
   var URL_POST = 'https://js.dump.academy/keksobooking';
-  var POST = 'POST';
+  var POST_REQUEST = 'POST';
   var TIMEOUT = 1000000;
   var STATUS_OK = 200;
   var DATA_NULL = null;
@@ -14,17 +14,17 @@
     // Функция отправки данных на сервер
     post: function (data, onLoad, onError) {
 
-      postRequest(data, onLoad, onError, URL_POST, POST);
+      postRequest(data, onLoad, onError, URL_POST, POST_REQUEST);
     },
 
     // Функция загрузки данных с сервера
     load: function (onLoad, onError) {
 
-      postRequest(DATA_NULL, onLoad, onError, URL_GET, GET);
+      postRequest(DATA_NULL, onLoad, onError, URL_REQUEST, DATA_REQUEST);
     },
 
     // Функция отображения ошибок при загрузке данных, тайм-ауты (отрисовка элемента error в DOM)
-    onErrorShow: function (errorMessage) {
+    onErrorLoad: function (errorMessage) {
       var templateError = document.querySelector('#error').content.querySelector('.error');
       var errorPopup = templateError.cloneNode(true);
       var closeError = errorPopup.querySelector('.error__button');
@@ -34,14 +34,14 @@
 
 
       var onErrorEscPress = function (evtEsc) {
-        isEscPress(evtEsc, closePopupError);
+        isEscPress(evtEsc, onClosePopupError);
       };
 
       var onErrorClick = function (evtClick) {
-        isClick(evtClick, closePopupError);
+        isClick(evtClick, onClosePopupError);
       };
 
-      var closePopupError = function () {
+      var onClosePopupError = function () {
         errorPopup.remove();
 
         document.removeEventListener('keydown', onErrorEscPress);
@@ -55,7 +55,7 @@
     },
 
 
-    // Функция отображения успешного результата при отправке данных формы (отрисовка элемента error в DOM)
+    // Функция отображения успешного результата при отправке данных формы
     showSuccess: function () {
       var templateSuccess = document.querySelector('#success').content.querySelector('.success');
       var successPopup = templateSuccess.cloneNode(true);
@@ -63,14 +63,14 @@
 
 
       var onSuccessEscPress = function (evtEsc) {
-        isEscPress(evtEsc, closePopupSuccess);
+        isEscPress(evtEsc, onClosePopupSuccess);
       };
 
       var onSuccessClick = function (evtClick) {
-        isClick(evtClick, closePopupSuccess);
+        isClick(evtClick, onClosePopupSuccess);
       };
 
-      var closePopupSuccess = function () {
+      var onClosePopupSuccess = function () {
         successPopup.remove();
 
         document.removeEventListener('keydown', onSuccessEscPress);
@@ -109,15 +109,15 @@
     xhr.send(data);
   };
 
-  var isEscPress = function (evtEsc, closePopup) {
+  var isEscPress = function (evtEsc, onClosePopup) {
     if (evtEsc.keyCode === window.util.ESC_KEYCODE) {
-      closePopup();
+      onClosePopup();
     }
   };
 
-  var isClick = function (evtClick, closePopup) {
+  var isClick = function (evtClick, onClosePopup) {
     evtClick.preventDefault();
-    closePopup();
+    onClosePopup();
   };
 
 })();

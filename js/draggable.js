@@ -15,7 +15,7 @@
     evt.preventDefault();
     var dragged = false;
 
-    var startCoords = new window.Coordinate(evt.clientX, evt.clientY);
+    var startLocation = new window.Coordinate(evt.clientX, evt.clientY);
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
@@ -23,12 +23,12 @@
 
 
       var shift = new window.Coordinate(moveEvt.clientX, moveEvt.clientY, window.util.pinMainButton.offsetLeft, window.util.pinMainButton.offsetTop);
-      shift.setX(startCoords.x - shift.x);
-      shift.setY(startCoords.y - shift.y);
+      shift.setX(startLocation.x - shift.x);
+      shift.setY(startLocation.y - shift.y);
 
 
-      startCoords.setStartX(moveEvt.clientX);
-      startCoords.setStartY(moveEvt.clientY);
+      startLocation.setStartX(moveEvt.clientX);
+      startLocation.setStartY(moveEvt.clientY);
 
 
       window.util.pinMainButton.style.top = shift.y + 'px';

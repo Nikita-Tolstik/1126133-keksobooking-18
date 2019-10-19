@@ -43,10 +43,7 @@
     window.util.pinList.appendChild(fragment);
 
 
-    window.renderOpenPopup(pins); // Вызов функции добавления возможности открытия и закрытия карточки объявления
-
-    // Отображение фильтров
-    window.filterContainer.classList.remove('hidden');
+    window.renderPopup(pins); // Вызов функции добавления возможности открытия и закрытия карточки объявления
   };
 
 })();
