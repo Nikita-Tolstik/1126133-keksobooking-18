@@ -6,6 +6,7 @@
 
   var adFormfieldsetAll = window.util.formAd.querySelectorAll('fieldset');
   var capacityOptions = document.querySelectorAll('#capacity option');
+  window.filterContainer = window.util.map.querySelector('.map__filters-container');
 
   var mapFilterChildren = window.util.mapFilter.children;
   var mapFilters = Array.from(mapFilterChildren);
@@ -15,6 +16,8 @@
 
   // Функция неактивного состояния страницы
   window.isInactive = function () {
+
+    window.filterContainer.classList.add('hidden');
 
     adFormfieldsetAll.forEach(function (element) {
       element.disabled = true;
