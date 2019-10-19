@@ -108,8 +108,8 @@
 
   // Обработчик отправки формы на сервер
   window.util.formAd.addEventListener('submit', function (evt) {
-    window.backend.post(new FormData(window.util.formAd), onSuccessPost, window.backend.onErrorShow); // Вызов функции отправки данных на сервер
     evt.preventDefault();
+    window.backend.post(new FormData(window.util.formAd), onSuccessPost, window.backend.onErrorShow); // Вызов функции отправки данных на сервер
   });
 
 
@@ -161,17 +161,17 @@
     window.resetImage();
   };
 
-  // var features = window.util.formAd.querySelectorAll('.ad-form__element--wide.features input');
-  // console.log(features);
-  // features.forEach(function (elem) {
-  //   elem.addEventListener('keydown', function (evt) {
-  //     if (evt.keyCode === window.util.ENTER_KEYCODE) {
-  //       if (!elem.checked) {
-  //         elem.checked = false;
-  //       } else {
-  //         elem.checked = true;
-  //       }
-  //     }
-  //   });
-  // });
+  // Добавлнена функциональность выбирать удобства в форме объявления с помощью enter
+  window.util.formAd.querySelectorAll('.features input').forEach(function (element) {
+    element.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.util.ENTER_KEYCODE) {
+        evt.preventDefault();
+        if (element.checked) {
+          element.checked = false;
+        } else {
+          element.checked = true;
+        }
+      }
+    });
+  });
 })();
