@@ -3,12 +3,32 @@
 
 // Проверка валидации комнат и гостей
 (function () {
+  var roomSelect = document.querySelector('[name=rooms]');
+  var title = window.util.formAd.querySelector('#title');
+  var priceNight = window.util.formAd.querySelector('#price');
+
+  var type = window.util.formAd.querySelector('#type');
+  var typeOptions = type.querySelectorAll('option');
+  var selectType = typeOptions[type.selectedIndex].value;
+
+  var timeIn = window.util.formAd.querySelector('#timein');
+  var timeOut = window.util.formAd.querySelector('#timeout');
+
+  var buttonReset = window.util.formAd.querySelector('.ad-form__reset');
 
   var Limit = {
     MIN_LENGTH: '30',
     MAX_LENGTH: '100',
     MAX_PRICE: '1000000'
   };
+
+  var priceMap = {
+    'bungalo': '0',
+    'flat': '1000',
+    'house': '5000',
+    'palace': '10000'
+  };
+
 
   var validateGuestNumber = function (evt) {
     var roomMap = {
@@ -41,35 +61,22 @@
     });
   };
 
-  var roomSelect = document.querySelector('[name=rooms]');
+
   roomSelect.addEventListener('input', function (evt) {
     validateGuestNumber(evt);
   });
 
 
   // Валидация заголовка
-  var title = window.util.formAd.querySelector('#title');
   title.setAttribute('required', true);
   title.setAttribute('minlength', Limit.MIN_LENGTH);
   title.setAttribute('maxlength', Limit.MAX_LENGTH);
 
   // Валидация цены за ночь
-  var priceNight = window.util.formAd.querySelector('#price');
   priceNight.setAttribute('required', true);
   priceNight.setAttribute('max', Limit.MAX_PRICE);
 
   // Валидация соответствия типа жилья и цены за ночь
-  var type = window.util.formAd.querySelector('#type');
-  var typeOptions = type.querySelectorAll('option');
-  var selectType = typeOptions[type.selectedIndex].value;
-
-  var priceMap = {
-    'bungalo': '0',
-    'flat': '1000',
-    'house': '5000',
-    'palace': '10000'
-  };
-
   priceNight.setAttribute('placeholder', priceMap[selectType]);
 
   var validateType = function () {
@@ -90,9 +97,6 @@
   window.util.inputAddress.setAttribute('readonly', true);
 
   // Валидация времени заезда и выезда
-  var timeIn = window.util.formAd.querySelector('#timein');
-  var timeOut = window.util.formAd.querySelector('#timeout');
-
   timeIn.addEventListener('input', function () {
     timeOut.value = timeIn.value;
   });
@@ -102,15 +106,33 @@
   });
 
 
-  // Вызов функции отправки данных на сервер
+  // Обработчик отправки формы на сервер
   window.util.formAd.addEventListener('submit', function (evt) {
-    window.backend.post(new FormData(window.util.formAd), onSuccessPost, window.backend.onErrorShow);
+    window.backend.post(new FormData(window.util.formAd), onSuccessPost, window.backend.onErrorShow); // Вызов функции отправки данных на сервер
     evt.preventDefault();
   });
 
 
-  // Функция при успешной отрпавке данных на сервер, возвращает страницу в начальное состояние
+  // Обработчик сброса формы
+  buttonReset.addEventListener('click', function (evt) {
+    evt.preventDefault();
+
+    resetFormAd(); // сброс формы объявления и перевода страницы в неактивное состояние
+  });
+
+
+  // Функция при успешной отрпавке данных на сервер
   var onSuccessPost = function () {
+
+    resetFormAd(); // сброс формы объявления и перевода страницы в неактивное состояние
+
+    window.backend.showSuccess(); // Отображение окна успешной отправки данных
+
+  };
+
+
+  // Функция сброса формы объявления и перевода страницы в неактивное состояние
+  var resetFormAd = function () {
 
     window.util.map.classList.add('map--faded');
     window.util.formAd.classList.add('ad-form--disabled');
@@ -129,14 +151,27 @@
     window.util.pinMainButton.addEventListener('mousedown', window.onMainPinPress);
     window.util.pinMainButton.addEventListener('keydown', window.onEnterPress);
 
-    // Отображение окна успешной отправки данных
-    window.backend.showSuccess();
-
     // Возвращает изначальные значения фильтров карты
     window.resetFilter();
 
-    // Сброс фото аватара
+    priceNight.setAttribute('placeholder', priceMap[selectType]);
+    priceNight.setAttribute('min', priceMap[selectType]);
+
+    // Сброс фото картинок
     window.resetImage();
   };
 
+  // var features = window.util.formAd.querySelectorAll('.ad-form__element--wide.features input');
+  // console.log(features);
+  // features.forEach(function (elem) {
+  //   elem.addEventListener('keydown', function (evt) {
+  //     if (evt.keyCode === window.util.ENTER_KEYCODE) {
+  //       if (!elem.checked) {
+  //         elem.checked = false;
+  //       } else {
+  //         elem.checked = true;
+  //       }
+  //     }
+  //   });
+  // });
 })();
