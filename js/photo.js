@@ -9,25 +9,22 @@
   var avatarPreview = window.util.formAd.querySelector('.ad-form-header__preview img');
   var originalAvatarPreview = avatarPreview.src;
 
+  var houseFile = window.util.formAd.querySelector('.ad-form__input');
+  var housePreview = window.util.formAd.querySelector('.ad-form__photo');
+  var photoContainer = window.util.formAd.querySelector('.ad-form__photo-container');
+
 
   avatarFile.addEventListener('change', function () {
-
-    changePhoto(avatarFile, avatarPreview, onSrcRender);
-
+    loadImage(avatarFile, avatarPreview, onAvatarChange);
   });
 
 
-  var houseFileChooser = window.util.formAd.querySelector('.ad-form__input');
-  window.housePreview = window.util.formAd.querySelector('.ad-form__photo');
-  window.photoContainer = window.util.formAd.querySelector('.ad-form__photo-container');
-
-  houseFileChooser.addEventListener('change', function () {
-
-    changePhoto(houseFileChooser, window.housePreview, onImageRender);
-
+  houseFile.addEventListener('change', function () {
+    loadImage(houseFile, housePreview, onImageChange);
   });
 
-  var changePhoto = function (fileChooser, preview, onRender) {
+  // Функция загрузки аватара и картинок жилья
+  var loadImage = function (fileChooser, preview, onChangeImage) {
     var file = fileChooser.files[0];
 
     if (file) {
@@ -40,7 +37,7 @@
         var reader = new FileReader();
 
         reader.addEventListener('load', function () {
-          onRender(preview, reader.result);
+          onChangeImage(preview, reader.result);
         });
 
         reader.readAsDataURL(file);
@@ -48,13 +45,13 @@
     }
   };
 
-
-  var onSrcRender = function (preview, src) {
-    preview.src = src;
+  // Функция обратного вызова загрузки аватара
+  var onAvatarChange = function (preview, dataUrl) {
+    preview.src = dataUrl;
   };
 
-
-  var onImageRender = function (preview, src) {
+  // Функция обратного вызова загрузки картинок жилья
+  var onImageChange = function (preview, dataUrl) {
 
     getImages().forEach(function (elem) {
       if (!elem.childNodes[0]) {
@@ -62,31 +59,32 @@
       }
     });
 
-    var containerElement = preview.cloneNode(true);
-    var imageElement = avatarPreview.cloneNode(true);
-    imageElement.src = src;
+    var containerBlock = preview.cloneNode(true);
+    var imageHouse = avatarPreview.cloneNode(true);
+    imageHouse.src = dataUrl;
 
-    containerElement.appendChild(imageElement);
-    window.photoContainer.appendChild(containerElement);
+    containerBlock.appendChild(imageHouse);
+    photoContainer.appendChild(containerBlock);
   };
 
-
+  // Функция возвращает все элементы с классом ad-form__photo
   var getImages = function () {
-    var images = window.photoContainer.querySelectorAll('.ad-form__photo');
+    var images = photoContainer.querySelectorAll('.ad-form__photo');
     return images;
   };
 
 
-  // Сброс фото аватара
+  // Сброс картинок
   window.resetImage = function () {
 
     avatarPreview.src = originalAvatarPreview; // Сброс аватарки
 
+    // Сброс картинок жилья
     getImages().forEach(function (elem) {
       elem.remove();
     });
 
-    window.photoContainer.appendChild(window.housePreview);
+    photoContainer.appendChild(housePreview);
   };
 
 })();
