@@ -152,7 +152,7 @@
     window.util.pinMainButton.addEventListener('keydown', window.onEnterPress);
 
     // Возвращает изначальные значения фильтров карты
-    window.resetFilter();
+    window.filter.resetFilter();
 
     priceNight.setAttribute('placeholder', priceMap[selectType]);
     priceNight.setAttribute('min', priceMap[selectType]);

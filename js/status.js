@@ -65,7 +65,7 @@
     var onDataLoad = function (data) {
       window.ads = data; // Передача данных с сервера в глобальную область видимости
 
-      window.updatePins(); // Вызов функции отрисовки меток на карте
+      window.filter.updatePins(); // Вызов функции отрисовки меток на карте
       // Отображение фильтров
       window.filterContainer.classList.remove('hidden');
     };
