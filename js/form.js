@@ -145,11 +145,11 @@
 
     window.util.mapFilter.reset(); // Сброс формы фильтров
     window.util.formAd.reset(); // Сброс формы объявления
-    window.setInactive(); // Перевод страницы в неактивный режим
+    window.condition.setInactive(); // Перевод страницы в неактивный режим
 
     // Перевод страницы в активный режим
-    window.util.pinMainButton.addEventListener('mousedown', window.onMainPinPress);
-    window.util.pinMainButton.addEventListener('keydown', window.onEnterPress);
+    window.util.pinMainButton.addEventListener('mousedown', window.condition.onMainPinPress);
+    window.util.pinMainButton.addEventListener('keydown', window.condition.onEnterPress);
 
     // Возвращает изначальные значения фильтров карты
     window.filter.resetFilter();
