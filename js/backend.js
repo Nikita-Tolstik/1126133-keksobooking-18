@@ -107,11 +107,10 @@
         successPopup.remove();
 
         document.removeEventListener('keydown', onSuccessEscPress);
-        document.removeEventListener('click', onSuccessClick);
       };
 
       document.addEventListener('keydown', onSuccessEscPress);
-      document.addEventListener('click', onSuccessClick);
+      successPopup.addEventListener('click', onSuccessClick);
     }
   };
 
