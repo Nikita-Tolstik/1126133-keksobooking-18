@@ -113,26 +113,8 @@
   });
 
 
-  // Обработчик сброса формы
-  buttonReset.addEventListener('click', function (evt) {
-    evt.preventDefault();
-
-    resetFormAd(); // сброс формы объявления и перевод страницы в неактивное состояние
-  });
-
-
-  // Функция при успешной отрпавке данных на сервер
-  var onSuccessPost = function () {
-
-    resetFormAd(); // сброс формы объявления и перевода страницы в неактивное состояние
-
-    window.backend.showSuccess(); // Отображение окна успешной отправки данных
-
-  };
-
-
   // Функция сброса формы объявления и перевода страницы в неактивное состояние
-  var resetFormAd = function () {
+  window.resetFormAd = function () {
 
     window.util.map.classList.add('map--faded');
     window.util.formAd.classList.add('ad-form--disabled');
@@ -159,6 +141,23 @@
 
     // Сброс фото картинок
     window.resetImage();
+  };
+
+  // Обработчик сброса формы
+  buttonReset.addEventListener('click', function (evt) {
+    evt.preventDefault();
+
+    window.resetFormAd(); // сброс формы объявления и перевод страницы в неактивное состояние
+  });
+
+
+  // Функция при успешной отрпавке данных на сервер
+  var onSuccessPost = function () {
+
+    window.resetFormAd(); // сброс формы объявления и перевода страницы в неактивное состояние
+
+    window.backend.showSuccess(); // Отображение окна успешной отправки данных
+
   };
 
   // Добавлнена функциональность выбирать удобства в форме объявления с помощью enter
