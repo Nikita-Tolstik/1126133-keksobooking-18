@@ -14,27 +14,42 @@
   var pinMainX = window.util.pinMainButton.style.left;
   var pinMainY = window.util.pinMainButton.style.top;
 
-  // Функция неактивного состояния страницы
-  window.setInactive = function () {
+  // Пространство имён condition.js
+  window.condition = {
 
-    window.filterContainer.classList.add('hidden');
+    // Функция неактивного состояния страницы
+    setInactive: function () {
 
-    adFormfieldsets.forEach(function (element) {
-      element.disabled = true;
-    });
+      window.filterContainer.classList.add('hidden');
 
-    mapFilters.forEach(function (element) {
-      element.disabled = true;
-    });
+      adFormfieldsets.forEach(function (element) {
+        element.disabled = true;
+      });
 
-    window.util.pinMainButton.style.left = pinMainX;
-    window.util.pinMainButton.style.top = pinMainY;
+      mapFilters.forEach(function (element) {
+        element.disabled = true;
+      });
 
-    window.util.inputAddress.value = (window.util.pinMainButton.offsetLeft + window.draggable.PINHALF_SIZE) + ', ' + (window.util.pinMainButton.offsetTop + window.draggable.PINHALF_SIZE);
+      window.util.pinMainButton.style.left = pinMainX;
+      window.util.pinMainButton.style.top = pinMainY;
+
+      window.util.inputAddress.value = (window.util.pinMainButton.offsetLeft + window.draggable.PINHALF_SIZE) + ', ' + (window.util.pinMainButton.offsetTop + window.draggable.PINHALF_SIZE);
+    },
+
+    onEnterPress: function (evt) {
+      if (evt.keyCode === window.util.ENTER_KEYCODE) {
+        openMap();
+      }
+    },
+
+    onMainPinPress: function (evtCl) {
+      evtCl.preventDefault();
+      openMap();
+    }
+
   };
 
-
-  window.setInactive(); // Функция неактивного состояния страницы
+  window.condition.setInactive(); // Функция неактивного состояния страницы
 
 
   // Активное состояние страницы
@@ -65,7 +80,7 @@
     var onDataLoad = function (data) {
       window.ads = data; // Передача данных с сервера в глобальную область видимости
 
-      window.updatePins(); // Вызов функции отрисовки меток на карте
+      window.filter.updatePins(); // Вызов функции отрисовки меток на карте
       // Отображение фильтров
       window.filterContainer.classList.remove('hidden');
     };
@@ -76,25 +91,14 @@
 
     window.util.inputAddress.value = (window.util.pinMainButton.offsetLeft + window.draggable.PINHALF_SIZE) + ', ' + (window.util.pinMainButton.offsetTop + window.draggable.PIN_HEIGHT);
 
-    window.util.pinMainButton.removeEventListener('keydown', window.onEnterPress);
-    window.util.pinMainButton.removeEventListener('mousedown', window.onMainPinPress);
+    window.util.pinMainButton.removeEventListener('keydown', window.condition.onEnterPress);
+    window.util.pinMainButton.removeEventListener('mousedown', window.condition.onMainPinPress);
   };
 
 
-  window.onEnterPress = function (evt) {
-    if (evt.keyCode === window.util.ENTER_KEYCODE) {
-      openMap();
-    }
-  };
+  window.util.pinMainButton.addEventListener('mousedown', window.condition.onMainPinPress);
 
-  window.onMainPinPress = function (evtCl) {
-    evtCl.preventDefault();
-    openMap();
-  };
-
-  window.util.pinMainButton.addEventListener('mousedown', window.onMainPinPress);
-
-  window.util.pinMainButton.addEventListener('keydown', window.onEnterPress);
+  window.util.pinMainButton.addEventListener('keydown', window.condition.onEnterPress);
 
 
 })();

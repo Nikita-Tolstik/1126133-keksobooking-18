@@ -113,26 +113,8 @@
   });
 
 
-  // Обработчик сброса формы
-  buttonReset.addEventListener('click', function (evt) {
-    evt.preventDefault();
-
-    resetFormAd(); // сброс формы объявления и перевод страницы в неактивное состояние
-  });
-
-
-  // Функция при успешной отрпавке данных на сервер
-  var onSuccessPost = function () {
-
-    resetFormAd(); // сброс формы объявления и перевода страницы в неактивное состояние
-
-    window.backend.showSuccess(); // Отображение окна успешной отправки данных
-
-  };
-
-
   // Функция сброса формы объявления и перевода страницы в неактивное состояние
-  var resetFormAd = function () {
+  window.resetFormAd = function () {
 
     window.util.map.classList.add('map--faded');
     window.util.formAd.classList.add('ad-form--disabled');
@@ -145,20 +127,37 @@
 
     window.util.mapFilter.reset(); // Сброс формы фильтров
     window.util.formAd.reset(); // Сброс формы объявления
-    window.setInactive(); // Перевод страницы в неактивный режим
+    window.condition.setInactive(); // Перевод страницы в неактивный режим
 
     // Перевод страницы в активный режим
-    window.util.pinMainButton.addEventListener('mousedown', window.onMainPinPress);
-    window.util.pinMainButton.addEventListener('keydown', window.onEnterPress);
+    window.util.pinMainButton.addEventListener('mousedown', window.condition.onMainPinPress);
+    window.util.pinMainButton.addEventListener('keydown', window.condition.onEnterPress);
 
     // Возвращает изначальные значения фильтров карты
-    window.resetFilter();
+    window.filter.resetFilter();
 
     priceNight.setAttribute('placeholder', priceMap[selectType]);
     priceNight.setAttribute('min', priceMap[selectType]);
 
     // Сброс фото картинок
     window.resetImage();
+  };
+
+  // Обработчик сброса формы
+  buttonReset.addEventListener('click', function (evt) {
+    evt.preventDefault();
+
+    window.resetFormAd(); // сброс формы объявления и перевод страницы в неактивное состояние
+  });
+
+
+  // Функция при успешной отрпавке данных на сервер
+  var onSuccessPost = function () {
+
+    window.resetFormAd(); // сброс формы объявления и перевода страницы в неактивное состояние
+
+    window.backend.showSuccess(); // Отображение окна успешной отправки данных
+
   };
 
   // Добавлнена функциональность выбирать удобства в форме объявления с помощью enter
