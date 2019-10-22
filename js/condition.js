@@ -51,7 +51,6 @@
 
   window.condition.setInactive(); // Функция неактивного состояния страницы
 
-
   // Активное состояние страницы
   var openMap = function () {
     window.util.map.classList.remove('map--faded');

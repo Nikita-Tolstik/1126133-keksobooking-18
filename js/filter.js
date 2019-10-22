@@ -24,64 +24,6 @@
   var features = window.util.mapFilter.querySelectorAll('fieldset input');
   var featureValues = [];
 
-
-  // Добавление обработчиков на форму фильтрации по типу жилья, цене, кол-ву комнат, кол-ву гостей
-  window.util.mapFilter.querySelectorAll('select').forEach(function (element) {
-    element.addEventListener('input', function (evt) {
-
-      switch (element.name) {
-        case 'housing-type':
-          typeValue = evt.target.value;
-          break;
-        case 'housing-price':
-          priceValue = evt.target.value;
-          break;
-        case 'housing-rooms':
-          roomValue = evt.target.value;
-          break;
-        case 'housing-guests':
-          guestValue = evt.target.value;
-          break;
-      }
-      // Вызов функции устранения дребезга
-      selectChange();
-    });
-  });
-
-
-  // Смена удобства при клике
-  features.forEach(function (element) {
-    element.addEventListener('click', function () {
-      changeCheckbox(!element.checked, element);
-    });
-  });
-
-  // Смена удобства при нажатии на enter
-  features.forEach(function (element) {
-    element.addEventListener('keypress', function (evt) {
-      if (evt.keyCode === window.util.ENTER_KEYCODE) {
-        changeCheckbox(element.checked, element);
-      }
-    });
-  });
-
-  // Функция устранения дребезга
-  var selectChange = window.debounce(function () {
-    window.filter.updatePins();
-  });
-
-  // проверка, поставили или убрали чекбокс с данного удобства (если поставили - добавить, если убрали - удалить)
-  var changeCheckbox = function (flag, element) {
-    if (flag) {
-      element.checked = false;
-      featureValues.splice(featureValues.indexOf(element.value), ONE_ELEMENT);
-    } else {
-      element.checked = true;
-      featureValues.push(element.value);
-    }
-    selectChange();
-  };
-
   window.filter = {
 
     // Функция фильтрации объявления
@@ -151,7 +93,64 @@
       guestValue = START_VALUE;
       featureValues = [];
     }
-
   };
+
+  // Функция устранения дребезга
+  var selectChange = window.debounce(function () {
+    window.filter.updatePins();
+  });
+
+  // Добавление обработчиков на форму фильтрации по типу жилья, цене, кол-ву комнат, кол-ву гостей
+  window.util.mapFilter.querySelectorAll('select').forEach(function (element) {
+    element.addEventListener('input', function (evt) {
+
+      switch (element.name) {
+        case 'housing-type':
+          typeValue = evt.target.value;
+          break;
+        case 'housing-price':
+          priceValue = evt.target.value;
+          break;
+        case 'housing-rooms':
+          roomValue = evt.target.value;
+          break;
+        case 'housing-guests':
+          guestValue = evt.target.value;
+          break;
+      }
+      // Вызов функции устранения дребезга
+      selectChange();
+    });
+  });
+
+
+  // проверка, поставили или убрали чекбокс с данного удобства (если поставили - добавить, если убрали - удалить)
+  var changeCheckbox = function (flag, element) {
+    if (flag) {
+      element.checked = false;
+      featureValues.splice(featureValues.indexOf(element.value), ONE_ELEMENT);
+    } else {
+      element.checked = true;
+      featureValues.push(element.value);
+    }
+    selectChange();
+  };
+
+  // Смена удобства при клике
+  features.forEach(function (element) {
+    element.addEventListener('click', function () {
+      changeCheckbox(!element.checked, element);
+    });
+  });
+
+  // Смена удобства при нажатии на enter
+  features.forEach(function (element) {
+    element.addEventListener('keypress', function (evt) {
+      if (evt.keyCode === window.util.ENTER_KEYCODE) {
+        changeCheckbox(element.checked, element);
+      }
+    });
+  });
+
 
 })();
